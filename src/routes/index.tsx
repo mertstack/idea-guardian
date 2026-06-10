@@ -1,14 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
-  Brain,
-  ClipboardCheck,
+  ArrowUpRight,
+  BarChart3,
   Compass,
+  Gauge,
   LineChart,
-  Share2,
+  Megaphone,
+  Network,
+  ShieldCheck,
   Sparkles,
-  Target,
-  TrendingDown,
+  Tag,
+  UserCheck,
 } from "lucide-react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
@@ -16,11 +19,16 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FailWise — Don't build what will fail" },
+      { title: "FailWise — Founder intelligence platform" },
       {
         name: "description",
         content:
-          "AI startup intelligence that analyzes your idea for failure risk, simulates a pre-mortem, and rebuilds it for success.",
+          "FailWise is the founder intelligence platform. Score your idea on market demand, competition, pricing, distribution, and founder advantage before you build.",
+      },
+      { property: "og:title", content: "FailWise — Founder intelligence platform" },
+      {
+        property: "og:description",
+        content: "AI startup intelligence: risk score, pre-mortem, and rebuild plan.",
       },
     ],
   }),
@@ -30,133 +38,145 @@ export const Route = createFileRoute("/")({
 function Landing() {
   return (
     <div className="relative min-h-screen">
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[900px]"
-        style={{ background: "var(--gradient-hero)" }}
-      />
       <SiteHeader />
 
       {/* Hero */}
-      <section className="relative mx-auto max-w-6xl px-6 pt-24 pb-20 text-center">
-        <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs text-muted-foreground backdrop-blur">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          Startup decision intelligence — before you build
-        </div>
-        <h1 className="mx-auto mt-8 max-w-4xl font-display text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
-          Don't build what will <span className="text-gradient-risk">fail.</span>
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-          FailWise is an AI that analyzes your startup before you waste time and money — risk score,
-          pre-mortem simulation, and a rebuild strategy in under a minute.
-        </p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link
-            to="/analyze"
-            className="group inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] glow-primary"
-          >
-            Analyze your idea
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-          <Link
-            to="/pricing"
-            className="inline-flex h-12 items-center rounded-md border border-border bg-card/60 px-6 text-sm font-medium text-foreground backdrop-blur hover:bg-card"
-          >
-            See pricing
-          </Link>
+      <section className="relative mx-auto max-w-6xl px-6 pt-20 pb-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-3 py-1 text-[12px] text-muted-foreground backdrop-blur">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Founder intelligence · Pre-build clarity
+          </div>
+          <h1 className="mt-7 text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
+            Don't build what will <span className="text-primary">fail.</span>
+          </h1>
+          <p className="mx-auto mt-5 max-w-2xl text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+            FailWise is the AI intelligence layer founders run before they build — scoring your
+            idea across market demand, competition, pricing, distribution, and founder advantage.
+          </p>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              to="/analyze"
+              className="group inline-flex h-11 items-center gap-2 rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              Analyze your idea
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <Link
+              to="/pricing"
+              className="inline-flex h-11 items-center gap-1.5 rounded-md border border-border bg-surface px-5 text-sm font-medium text-foreground hover:bg-surface-2"
+            >
+              See pricing <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <p className="mt-5 text-xs text-muted-foreground">
+            Free analysis · No credit card · Used by indie hackers, founders & product teams
+          </p>
         </div>
 
-        {/* Mock dashboard preview */}
-        <div className="relative mx-auto mt-20 max-w-5xl">
-          <div className="absolute -inset-8 -z-10 rounded-3xl bg-gradient-to-b from-primary/20 to-transparent blur-3xl" />
-          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-elevated">
-            <div className="flex items-center gap-1.5 border-b border-border bg-background/40 px-4 py-3">
-              <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-warning/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
-              <span className="ml-3 font-mono text-xs text-muted-foreground">
-                failwise.ai/analyze
-              </span>
-            </div>
-            <div className="grid gap-6 p-8 md:grid-cols-3">
-              <div className="md:col-span-1">
-                <div className="rounded-xl border border-border bg-background/40 p-6 text-left">
-                  <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                    Risk score
-                  </div>
-                  <div className="mt-2 font-display text-6xl font-bold text-gradient-risk">82</div>
-                  <div className="mt-1 text-sm text-muted-foreground">Critical — likely to fail</div>
-                </div>
-              </div>
-              <div className="space-y-3 md:col-span-2">
-                {[
-                  ["Product-Market Fit", "No clear urgent pain", "high"],
-                  ["Pricing", "Underpriced for B2B buyer", "medium"],
-                  ["Competition", "Crowded category, no moat", "critical"],
-                ].map(([cat, issue, sev]) => (
-                  <div
-                    key={cat}
-                    className="flex items-center justify-between rounded-lg border border-border bg-background/40 px-4 py-3 text-left"
-                  >
-                    <div>
-                      <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                        {cat}
-                      </div>
-                      <div className="text-sm text-foreground">{issue}</div>
-                    </div>
-                    <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary">
-                      {sev}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Dashboard preview */}
+        <DashboardPreview />
       </section>
 
-      {/* Features */}
-      <section id="how" className="mx-auto max-w-6xl px-6 py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="text-xs uppercase tracking-widest text-primary">How it works</div>
-          <h2 className="mt-3 font-display text-4xl font-semibold">
-            Stress-test your startup before reality does.
-          </h2>
-        </div>
-        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="group relative rounded-xl border border-border bg-card p-6 transition-colors hover:border-primary/40"
-            >
-              <div className="mb-4 grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary">
-                <f.icon className="h-5 w-5" />
+      {/* Intelligence dimensions */}
+      <section id="intelligence" className="mx-auto max-w-6xl px-6 py-24">
+        <SectionHeader
+          eyebrow="Intelligence"
+          title="Five dimensions of startup viability"
+          sub="Every analysis is graded across the dimensions that decide which startups survive."
+        />
+        <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
+          {dimensions.map((d) => (
+            <div key={d.title} className="group relative bg-surface p-7">
+              <div className="flex items-center gap-2.5 text-[12px] uppercase tracking-wider text-muted-foreground">
+                <d.icon className="h-3.5 w-3.5 text-primary" />
+                {d.eyebrow}
               </div>
-              <h3 className="font-display text-lg font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{f.body}</p>
+              <h3 className="mt-3 text-lg font-semibold">{d.title}</h3>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">{d.body}</p>
             </div>
           ))}
         </div>
       </section>
 
+      {/* How risk score works */}
+      <section id="how-it-works" className="mx-auto max-w-6xl px-6 py-24">
+        <SectionHeader
+          eyebrow="Methodology"
+          title="How the Risk Score works"
+          sub="A composite signal calibrated against the dimensions that actually predict failure."
+        />
+        <div className="mt-14 grid gap-10 lg:grid-cols-[1.1fr_1fr]">
+          <ol className="space-y-6">
+            {[
+              {
+                t: "Idea decomposition",
+                b: "Your idea is parsed into market, audience, product, business model, and channel hypotheses.",
+              },
+              {
+                t: "Dimension scoring",
+                b: "Each of the five intelligence dimensions is scored 0–100 with a signal label and a structured rationale.",
+              },
+              {
+                t: "Risk weighting",
+                b: "Dimensions are weighted by historical impact on early-stage outcomes. Distribution and demand carry the most weight.",
+              },
+              {
+                t: "Composite score",
+                b: "The dimensions are combined into a single 0–100 Risk Score with a calibrated verdict and confidence level.",
+              },
+            ].map((s, i) => (
+              <li key={s.t} className="flex gap-4">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-border bg-surface text-[12px] font-medium tabular-nums text-muted-foreground">
+                  {i + 1}
+                </span>
+                <div>
+                  <div className="text-[15px] font-medium">{s.t}</div>
+                  <p className="mt-1 text-[14px] leading-relaxed text-muted-foreground">{s.b}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <div className="rounded-xl border border-border bg-surface p-7">
+            <div className="flex items-center justify-between text-[12px] uppercase tracking-wider text-muted-foreground">
+              <span>Risk score · interpretation</span>
+              <Gauge className="h-3.5 w-3.5" />
+            </div>
+            <div className="mt-5 space-y-3">
+              {[
+                { label: "0–39 · Low risk", color: "bg-success", desc: "Strong signal across most dimensions." },
+                { label: "40–59 · Moderate", color: "bg-warning", desc: "Workable, but specific weaknesses to address." },
+                { label: "60–79 · High", color: "bg-primary", desc: "Material risks — rebuild before committing." },
+                { label: "80–100 · Critical", color: "bg-primary", desc: "Likely to fail as currently framed." },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center gap-3 rounded-md border border-border bg-background/40 p-3">
+                  <span className={`h-2 w-2 rounded-full ${row.color}`} />
+                  <div className="flex-1">
+                    <div className="text-[13px] font-medium">{row.label}</div>
+                    <div className="text-[12px] text-muted-foreground">{row.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="mx-auto max-w-4xl px-6 py-24">
-        <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-12 text-center shadow-elevated">
-          <div
-            className="absolute inset-0 -z-10 opacity-60"
-            style={{ background: "var(--gradient-hero)" }}
-          />
-          <h2 className="font-display text-4xl font-semibold md:text-5xl">
-            Check it <span className="text-gradient-risk">before</span> you build it.
+      <section className="mx-auto max-w-5xl px-6 py-24">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-surface px-10 py-14 text-center">
+          <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
+            Validate before you build.
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-            Indie hackers, founders, and product builders use FailWise to avoid the dead ideas and
-            sharpen the live ones.
+          <p className="mx-auto mt-4 max-w-xl text-[15px] text-muted-foreground">
+            One analysis can save a quarter of wasted engineering. Run yours in under a minute.
           </p>
           <Link
             to="/analyze"
-            className="mt-8 inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground glow-primary"
+            className="mt-7 inline-flex h-11 items-center gap-2 rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
-            Run a free analysis <ArrowRight className="h-4 w-4" />
+            Start free analysis <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
@@ -166,37 +186,131 @@ function Landing() {
   );
 }
 
-const features = [
+function SectionHeader({
+  eyebrow,
+  title,
+  sub,
+}: {
+  eyebrow: string;
+  title: string;
+  sub?: string;
+}) {
+  return (
+    <div className="mx-auto max-w-2xl text-center">
+      <div className="text-[12px] font-medium uppercase tracking-wider text-primary">{eyebrow}</div>
+      <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight md:text-4xl">
+        {title}
+      </h2>
+      {sub && <p className="mx-auto mt-3 max-w-xl text-[15px] text-muted-foreground">{sub}</p>}
+    </div>
+  );
+}
+
+function DashboardPreview() {
+  const bars = [
+    { label: "Market Demand", val: 72, tone: "success" },
+    { label: "Competition", val: 38, tone: "primary" },
+    { label: "Pricing", val: 58, tone: "warning" },
+    { label: "Distribution", val: 41, tone: "primary" },
+    { label: "Founder Advantage", val: 66, tone: "success" },
+  ] as const;
+
+  return (
+    <div className="relative mx-auto mt-16 max-w-5xl">
+      <div className="absolute -inset-12 -z-10 rounded-[2rem] bg-[radial-gradient(ellipse_at_top,oklch(0.66_0.22_25/0.15),transparent_70%)] blur-2xl" />
+      <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-elevated">
+        <div className="flex items-center justify-between border-b border-border bg-background/40 px-4 py-2.5">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
+            <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
+            <span className="h-2.5 w-2.5 rounded-full bg-border-strong" />
+            <span className="ml-3 font-mono text-[11px] text-muted-foreground">
+              failwise.ai / analyze
+            </span>
+          </div>
+          <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+            Live
+          </span>
+        </div>
+        <div className="grid gap-6 p-8 md:grid-cols-[260px_1fr]">
+          <div className="rounded-xl border border-border bg-background/40 p-6">
+            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Risk score</div>
+            <div className="mt-2 text-6xl font-semibold tabular-nums text-primary">68</div>
+            <div className="mt-1 text-sm text-muted-foreground">High risk · medium confidence</div>
+            <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-border">
+              <div className="h-full rounded-full bg-primary" style={{ width: "68%" }} />
+            </div>
+          </div>
+          <div className="space-y-2">
+            {bars.map((b) => (
+              <div
+                key={b.label}
+                className="flex items-center gap-4 rounded-md border border-border bg-background/40 px-4 py-2.5"
+              >
+                <span className="w-44 text-[13px] text-foreground">{b.label}</span>
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-border">
+                  <div
+                    className={`h-full rounded-full ${
+                      b.tone === "success"
+                        ? "bg-success"
+                        : b.tone === "warning"
+                          ? "bg-warning"
+                          : "bg-primary"
+                    }`}
+                    style={{ width: `${b.val}%` }}
+                  />
+                </div>
+                <span className="w-10 text-right font-mono text-[12px] tabular-nums text-muted-foreground">
+                  {b.val}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const dimensions = [
   {
-    icon: Brain,
-    title: "Startup Risk Analyzer",
-    body: "AI scores your idea 0–100 and explains the failure probability in plain language.",
+    icon: BarChart3,
+    eyebrow: "Market",
+    title: "Market Demand Analysis",
+    body: "Is there urgent, paid demand? We grade pull signal, market size, and timing.",
   },
   {
-    icon: TrendingDown,
-    title: "Failure Breakdown Engine",
-    body: "PMF, pricing, market timing, competition, growth — every weak point named and ranked.",
+    icon: Network,
+    eyebrow: "Competition",
+    title: "Competition Analysis",
+    body: "Density of the category, defensibility, and the realistic moat you can build.",
   },
   {
-    icon: LineChart,
-    title: "Pre-Mortem Simulator",
-    body: "A month-by-month simulation of how this startup dies in the next 6–12 months.",
+    icon: Tag,
+    eyebrow: "Pricing",
+    title: "Pricing Analysis",
+    body: "Willingness-to-pay, anchor pricing, and the unit economics that follow.",
   },
   {
-    icon: Compass,
-    title: "Rebuild Mode",
-    body: "New positioning, sharper ICP, smarter pricing, and an MVP roadmap that survives.",
+    icon: Megaphone,
+    eyebrow: "Distribution",
+    title: "Distribution Analysis",
+    body: "The channels you can realistically own — and what CAC looks like there.",
   },
   {
-    icon: Share2,
-    title: "Shareable Risk Card",
-    body: "One-click beautiful card for X and LinkedIn. Make founders fear and follow you.",
+    icon: UserCheck,
+    eyebrow: "Founder",
+    title: "Founder Advantage Analysis",
+    body: "Founder-market fit, distribution edge, and the unfair advantage you bring.",
   },
   {
-    icon: Target,
-    title: "Decision Intelligence",
-    body: "Not content. Not advice. A decision system you check before writing the first line of code.",
+    icon: ShieldCheck,
+    eyebrow: "Output",
+    title: "Calibrated Risk Score",
+    body: "A composite 0–100 score with confidence level and a structured rationale.",
   },
 ];
 
-void ClipboardCheck;
+void Sparkles;
+void LineChart;
+void Compass;
