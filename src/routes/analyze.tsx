@@ -56,6 +56,7 @@ const SAMPLES = [
 
 function AnalyzePage() {
   const analyze = useServerFn(analyzeStartup);
+  const { lang } = useI18n();
   const [idea, setIdea] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [active, setActive] = useState<HistoryItem | null>(null);
