@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
   head: () => ({
