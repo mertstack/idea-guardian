@@ -23,6 +23,7 @@ import { toast } from "sonner";
 
 import { RiskCard } from "@/components/risk-card";
 import { SiteHeader } from "@/components/site-chrome";
+import { useI18n } from "@/lib/i18n";
 import { analyzeStartup, type StartupAnalysis } from "@/lib/analyze.functions";
 
 export const Route = createFileRoute("/analyze")({
