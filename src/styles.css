@@ -131,5 +131,5 @@
 }
 
 @utility glow-primary {
-  box-shadow: 0 0 0 1px oklch(0.66 0.22 25 / 0.4), 0 12px 40px -12px oklch(0.66 0.22 25 / 0.35);
+  box-shadow: 0 0 0 1px color-mix(in oklab, #FF5A5F 40%, transparent), 0 12px 40px -12px color-mix(in oklab, #FF5A5F 35%, transparent);
 }
