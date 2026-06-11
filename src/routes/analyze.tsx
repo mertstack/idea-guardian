@@ -23,6 +23,7 @@ import { toast } from "sonner";
 
 import { RiskCard } from "@/components/risk-card";
 import { SiteHeader } from "@/components/site-chrome";
+import { useI18n } from "@/lib/i18n";
 import { analyzeStartup, type StartupAnalysis } from "@/lib/analyze.functions";
 
 export const Route = createFileRoute("/analyze")({
@@ -56,6 +57,7 @@ const SAMPLES = [
 
 function AnalyzePage() {
   const analyze = useServerFn(analyzeStartup);
+  const { lang } = useI18n();
   const [idea, setIdea] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [active, setActive] = useState<HistoryItem | null>(null);
@@ -70,7 +72,7 @@ function AnalyzePage() {
   }, []);
 
   const mutation = useMutation({
-    mutationFn: async (input: string) => analyze({ data: { idea: input } }),
+    mutationFn: async (input: string) => analyze({ data: { idea: input, lang } }),
     onSuccess: (analysis, input) => {
       const item: HistoryItem = {
         id: crypto.randomUUID(),
