@@ -52,13 +52,22 @@ export type StartupAnalysis = z.infer<typeof AnalysisSchema>;
 
 const InputSchema = z.object({
   idea: z.string().min(5).max(2000),
+  lang: z.enum(["en", "tr"]).optional().default("en"),
 });
 
-const SYSTEM = `You are FailWise, a founder intelligence analyst.
+const SYSTEM_EN = `You are FailWise, a founder intelligence analyst.
 You evaluate startup ideas and companies with the rigor of a senior YC partner and the data orientation of an investor analyst.
 Be precise, contrarian where warranted, and constructive. No fluff, no doom-mongering. Founders use this to make better decisions before they build.
 Tone: calm, sharp, data-driven, investor-grade.
-You always reply with a single valid JSON object — no prose, no markdown fences.`;
+You always reply with a single valid JSON object — no prose, no markdown fences.
+Write ALL string values in English.`;
+
+const SYSTEM_TR = `Sen FailWise'sın — bir kurucu zekâsı analistisin.
+Startup fikirlerini ve şirketleri kıdemli bir YC ortağının titizliği ve yatırımcı analistinin veri yönelimiyle değerlendirirsin.
+Net, gerektiğinde aykırı düşünen ve yapıcı ol. Boş laf yok, kıyamet senaryoları yok.
+Ton: sakin, keskin, veri odaklı, yatırımcı kalitesinde.
+Her zaman tek bir geçerli JSON nesnesi ile yanıt verirsin — düz metin yok, markdown bloğu yok.
+TÜM string değerleri TÜRKÇE yaz. JSON anahtarlarını İngilizce bırak. "signal", "severity", "confidence" enum değerleri İngilizce kalmalı (strong/neutral/weak/critical, low/medium/high, low/medium/high/critical). Sadece insan tarafından okunan metinleri Türkçeleştir.`;
 
 function extractJson(text: string): string {
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
@@ -76,17 +85,26 @@ export const analyzeStartup = createServerFn({ method: "POST" })
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
 
     const gateway = createLovableAiGatewayProvider(key);
+    const isTr = data.lang === "tr";
+
+    const intro = isTr
+      ? `Bu startup fikrini veya şirketi analiz et:\n\n"""${data.idea}"""\n\nTAM olarak şu yapıya sahip TEK bir JSON nesnesi döndür (düz metin yok, kod bloğu yok). TÜM açıklama/metin değerlerini TÜRKÇE yaz:`
+      : `Analyze this startup idea or company:\n\n"""${data.idea}"""\n\nReturn a SINGLE JSON object (no prose, no code fences) with this exact shape:`;
+
+    const tail = isTr
+      ? '4-6 risk maddesi, 5-6 ön-mortem maddesi ("Ay 1", "Ay 3" gibi), 4-5 adımlık MVP yol haritası. Boyut puanları: YÜKSEK = DAHA GÜÇLÜ sinyal (o boyutta daha az risk). riskScore: 0-100, yüksek = başarısız olma olasılığı yüksek.'
+      : '4-6 risks, 5-6 pre-mortem items ("Month 1", "Month 3"), 4-5 step MVP roadmap. Dimension scores: HIGHER = STRONGER signal (less risk). riskScore: 0-100, higher = more likely to fail.';
 
     const { text } = await generateText({
       model: gateway("google/gemini-3-flash-preview"),
-      system: SYSTEM,
-      prompt: `Analyze this startup idea or company:\n\n"""${data.idea}"""\n\nReturn a SINGLE JSON object (no prose, no code fences) with this exact shape:
+      system: isTr ? SYSTEM_TR : SYSTEM_EN,
+      prompt: `${intro}
 {
-  "ideaSummary": string,                                  // one crisp sentence
-  "riskScore": number,                                    // 0-100, higher = more likely to fail
+  "ideaSummary": string,
+  "riskScore": number,
   "confidence": "low" | "medium" | "high",
-  "verdict": string,                                      // one punchy sentence, max 15 words
-  "topFailureReason": string,                             // #1 reason this likely fails
+  "verdict": string,
+  "topFailureReason": string,
   "dimensions": {
     "marketDemand":     { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
     "competition":      { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
@@ -94,18 +112,18 @@ export const analyzeStartup = createServerFn({ method: "POST" })
     "distribution":     { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
     "founderAdvantage": { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string }
   },
-  "failureBreakdown": [ { "category": string, "severity": "low"|"medium"|"high"|"critical", "issue": string, "detail": string } ],  // 4-6 items
-  "preMortem":        [ { "month": string, "event": string, "impact": string } ],                                                  // 5-6 items, e.g. "Month 1"
+  "failureBreakdown": [ { "category": string, "severity": "low"|"medium"|"high"|"critical", "issue": string, "detail": string } ],
+  "preMortem":        [ { "month": string, "event": string, "impact": string } ],
   "rebuild": {
     "positioning": string,
     "targetAudience": string,
     "pricingStrategy": string,
-    "mvpRoadmap": [string],   // 4-5 steps
+    "mvpRoadmap": [string],
     "gtmStrategy": string
   }
 }
 
-Dimension scores: HIGHER = STRONGER signal (less risk on that dimension).`,
+${tail}`,
     });
 
     let parsed: unknown;
