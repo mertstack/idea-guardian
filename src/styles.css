@@ -63,8 +63,8 @@
   --popover: oklch(0.195 0.004 270);
   --popover-foreground: oklch(0.985 0 0);
 
-  /* Red, used sparingly */
-  --primary: oklch(0.66 0.22 25);
+  /* Red, used sparingly — Coral Red #FF5A5F */
+  --primary: #FF5A5F;
   --primary-foreground: oklch(0.985 0 0);
 
   --secondary: oklch(0.245 0.004 270);
@@ -76,7 +76,7 @@
   --accent: oklch(0.245 0.004 270);
   --accent-foreground: oklch(0.985 0 0);
 
-  --destructive: oklch(0.62 0.22 25);
+  --destructive: #FF5A5F;
   --destructive-foreground: oklch(0.985 0 0);
 
   --success: oklch(0.74 0.14 158);
@@ -88,7 +88,7 @@
   --border: oklch(1 0 0 / 0.08);
   --border-strong: oklch(1 0 0 / 0.14);
   --input: oklch(1 0 0 / 0.08);
-  --ring: oklch(0.66 0.22 25 / 0.5);
+  --ring: color-mix(in oklab, #FF5A5F 50%, transparent);
 }
 
 @layer base {
