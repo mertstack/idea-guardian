@@ -70,7 +70,7 @@ function AnalyzePage() {
   }, []);
 
   const mutation = useMutation({
-    mutationFn: async (input: string) => analyze({ data: { idea: input } }),
+    mutationFn: async (input: string) => analyze({ data: { idea: input, lang } }),
     onSuccess: (analysis, input) => {
       const item: HistoryItem = {
         id: crypto.randomUUID(),
