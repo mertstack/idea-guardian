@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, Output } from "ai";
+import { generateText } from "ai";
 import { z } from "zod";
 
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
@@ -57,7 +57,17 @@ const InputSchema = z.object({
 const SYSTEM = `You are FailWise, a founder intelligence analyst.
 You evaluate startup ideas and companies with the rigor of a senior YC partner and the data orientation of an investor analyst.
 Be precise, contrarian where warranted, and constructive. No fluff, no doom-mongering. Founders use this to make better decisions before they build.
-Tone: calm, sharp, data-driven, investor-grade.`;
+Tone: calm, sharp, data-driven, investor-grade.
+You always reply with a single valid JSON object — no prose, no markdown fences.`;
+
+function extractJson(text: string): string {
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  const candidate = fenced ? fenced[1] : text;
+  const start = candidate.indexOf("{");
+  const end = candidate.lastIndexOf("}");
+  if (start === -1 || end === -1) throw new Error("No JSON object found in model response");
+  return candidate.slice(start, end + 1);
+}
 
 export const analyzeStartup = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => InputSchema.parse(d))
@@ -67,26 +77,43 @@ export const analyzeStartup = createServerFn({ method: "POST" })
 
     const gateway = createLovableAiGatewayProvider(key);
 
-    const { experimental_output } = await generateText({
+    const { text } = await generateText({
       model: gateway("google/gemini-3-flash-preview"),
       system: SYSTEM,
-      prompt: `Analyze this startup idea or company:\n\n"""${data.idea}"""\n\nReturn structured intelligence:
-- ideaSummary: one crisp sentence describing what it is
-- riskScore: 0-100 overall failure probability (higher = more likely to fail). Calibrate honestly.
-- confidence: low/medium/high based on idea clarity
-- verdict: one punchy sentence (max 15 words)
-- topFailureReason: the #1 reason this likely fails
-- dimensions: score each on 0-100 (HIGHER = STRONGER signal / less risk on that dimension), with signal label (strong/neutral/weak/critical), one-line insight, and 1-2 sentence detail.
-  - marketDemand: is there real, urgent demand? evidence of pull?
-  - competition: how crowded/defensible? moat potential?
-  - pricing: pricing power, willingness to pay, unit economics
-  - distribution: realistic channels to acquire users at sane CAC
-  - founderAdvantage: founder-market fit, unfair advantage
-- failureBreakdown: 4-6 specific risks across PMF, pricing, timing, competition, growth, unit economics, team
-- preMortem: 5-6 timeline events showing how this fails over 12 months ("Month 1", "Month 3"…)
-- rebuild: how to make it work — positioning, sharper audience, pricing strategy, 4-5 step MVP roadmap, GTM`,
-      experimental_output: Output.object({ schema: AnalysisSchema }),
+      prompt: `Analyze this startup idea or company:\n\n"""${data.idea}"""\n\nReturn a SINGLE JSON object (no prose, no code fences) with this exact shape:
+{
+  "ideaSummary": string,                                  // one crisp sentence
+  "riskScore": number,                                    // 0-100, higher = more likely to fail
+  "confidence": "low" | "medium" | "high",
+  "verdict": string,                                      // one punchy sentence, max 15 words
+  "topFailureReason": string,                             // #1 reason this likely fails
+  "dimensions": {
+    "marketDemand":     { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
+    "competition":      { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
+    "pricing":          { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
+    "distribution":     { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
+    "founderAdvantage": { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string }
+  },
+  "failureBreakdown": [ { "category": string, "severity": "low"|"medium"|"high"|"critical", "issue": string, "detail": string } ],  // 4-6 items
+  "preMortem":        [ { "month": string, "event": string, "impact": string } ],                                                  // 5-6 items, e.g. "Month 1"
+  "rebuild": {
+    "positioning": string,
+    "targetAudience": string,
+    "pricingStrategy": string,
+    "mvpRoadmap": [string],   // 4-5 steps
+    "gtmStrategy": string
+  }
+}
+
+Dimension scores: HIGHER = STRONGER signal (less risk on that dimension).`,
     });
 
-    return experimental_output;
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(extractJson(text));
+    } catch (e) {
+      console.error("Failed to parse AI JSON:", text);
+      throw new Error("Model returned malformed JSON. Try again.");
+    }
+    return AnalysisSchema.parse(parsed);
   });
