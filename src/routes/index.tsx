@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Landing() {
+  const { t } = useI18n();
   return (
     <div className="relative min-h-screen">
       <SiteHeader />
@@ -45,34 +47,34 @@ function Landing() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-3 py-1 text-[12px] text-muted-foreground backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            Founder intelligence · Pre-build clarity
+            {t("hero.badge")}
           </div>
           <h1 className="mt-7 text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
-            Don't build what will <span className="text-primary">fail.</span>
+            {t("hero.title.a")} <span className="text-primary">{t("hero.title.b")}</span>
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-            FailWise is the AI intelligence layer founders run before they build — scoring your
-            idea across market demand, competition, pricing, distribution, and founder advantage.
+            {t("hero.subtitle")}
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               to="/analyze"
               className="group inline-flex h-11 items-center gap-2 rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Analyze your idea
+              {t("hero.cta.analyze")}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
               to="/pricing"
               className="inline-flex h-11 items-center gap-1.5 rounded-md border border-border bg-surface px-5 text-sm font-medium text-foreground hover:bg-surface-2"
             >
-              See pricing <ArrowUpRight className="h-3.5 w-3.5" />
+              {t("hero.cta.pricing")} <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
           </div>
           <p className="mt-5 text-xs text-muted-foreground">
-            Free analysis · No credit card · Used by indie hackers, founders & product teams
+            {t("hero.note")}
           </p>
         </div>
+
 
         {/* Dashboard preview */}
         <DashboardPreview />
