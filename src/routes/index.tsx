@@ -3,13 +3,10 @@ import {
   ArrowRight,
   ArrowUpRight,
   BarChart3,
-  Compass,
   Gauge,
-  LineChart,
   Megaphone,
   Network,
   ShieldCheck,
-  Sparkles,
   Tag,
   UserCheck,
 } from "lucide-react";
@@ -38,6 +35,30 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   const { t } = useI18n();
+
+  const dimensions = [
+    { icon: BarChart3, eyebrow: t("dim.market.eyebrow"), title: t("dim.market.title"), body: t("dim.market.body") },
+    { icon: Network, eyebrow: t("dim.comp.eyebrow"), title: t("dim.comp.title"), body: t("dim.comp.body") },
+    { icon: Tag, eyebrow: t("dim.price.eyebrow"), title: t("dim.price.title"), body: t("dim.price.body") },
+    { icon: Megaphone, eyebrow: t("dim.dist.eyebrow"), title: t("dim.dist.title"), body: t("dim.dist.body") },
+    { icon: UserCheck, eyebrow: t("dim.founder.eyebrow"), title: t("dim.founder.title"), body: t("dim.founder.body") },
+    { icon: ShieldCheck, eyebrow: t("dim.output.eyebrow"), title: t("dim.output.title"), body: t("dim.output.body") },
+  ];
+
+  const steps = [
+    { t: t("land.how.s1.t"), b: t("land.how.s1.b") },
+    { t: t("land.how.s2.t"), b: t("land.how.s2.b") },
+    { t: t("land.how.s3.t"), b: t("land.how.s3.b") },
+    { t: t("land.how.s4.t"), b: t("land.how.s4.b") },
+  ];
+
+  const tiers = [
+    { label: t("land.tier.low"), color: "bg-success", desc: t("land.tier.low.d") },
+    { label: t("land.tier.mod"), color: "bg-warning", desc: t("land.tier.mod.d") },
+    { label: t("land.tier.high"), color: "bg-primary", desc: t("land.tier.high.d") },
+    { label: t("land.tier.crit"), color: "bg-primary", desc: t("land.tier.crit.d") },
+  ];
+
   return (
     <div className="relative min-h-screen">
       <SiteHeader />
@@ -70,22 +91,18 @@ function Landing() {
               {t("hero.cta.pricing")} <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
           </div>
-          <p className="mt-5 text-xs text-muted-foreground">
-            {t("hero.note")}
-          </p>
+          <p className="mt-5 text-xs text-muted-foreground">{t("hero.note")}</p>
         </div>
 
-
-        {/* Dashboard preview */}
         <DashboardPreview />
       </section>
 
       {/* Intelligence dimensions */}
       <section id="intelligence" className="mx-auto max-w-6xl px-6 py-24">
         <SectionHeader
-          eyebrow="Intelligence"
-          title="Five dimensions of startup viability"
-          sub="Every analysis is graded across the dimensions that decide which startups survive."
+          eyebrow={t("land.intel.eyebrow")}
+          title={t("land.intel.title")}
+          sub={t("land.intel.sub")}
         />
         <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {dimensions.map((d) => (
@@ -104,30 +121,13 @@ function Landing() {
       {/* How risk score works */}
       <section id="how-it-works" className="mx-auto max-w-6xl px-6 py-24">
         <SectionHeader
-          eyebrow="Methodology"
-          title="How the Risk Score works"
-          sub="A composite signal calibrated against the dimensions that actually predict failure."
+          eyebrow={t("land.how.eyebrow")}
+          title={t("land.how.title")}
+          sub={t("land.how.sub")}
         />
         <div className="mt-14 grid gap-10 lg:grid-cols-[1.1fr_1fr]">
           <ol className="space-y-6">
-            {[
-              {
-                t: "Idea decomposition",
-                b: "Your idea is parsed into market, audience, product, business model, and channel hypotheses.",
-              },
-              {
-                t: "Dimension scoring",
-                b: "Each of the five intelligence dimensions is scored 0–100 with a signal label and a structured rationale.",
-              },
-              {
-                t: "Risk weighting",
-                b: "Dimensions are weighted by historical impact on early-stage outcomes. Distribution and demand carry the most weight.",
-              },
-              {
-                t: "Composite score",
-                b: "The dimensions are combined into a single 0–100 Risk Score with a calibrated verdict and confidence level.",
-              },
-            ].map((s, i) => (
+            {steps.map((s, i) => (
               <li key={s.t} className="flex gap-4">
                 <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-border bg-surface text-[12px] font-medium tabular-nums text-muted-foreground">
                   {i + 1}
@@ -142,17 +142,15 @@ function Landing() {
 
           <div className="rounded-xl border border-border bg-surface p-7">
             <div className="flex items-center justify-between text-[12px] uppercase tracking-wider text-muted-foreground">
-              <span>Risk score · interpretation</span>
+              <span>{t("land.tiers.title")}</span>
               <Gauge className="h-3.5 w-3.5" />
             </div>
             <div className="mt-5 space-y-3">
-              {[
-                { label: "0–39 · Low risk", color: "bg-success", desc: "Strong signal across most dimensions." },
-                { label: "40–59 · Moderate", color: "bg-warning", desc: "Workable, but specific weaknesses to address." },
-                { label: "60–79 · High", color: "bg-primary", desc: "Material risks — rebuild before committing." },
-                { label: "80–100 · Critical", color: "bg-primary", desc: "Likely to fail as currently framed." },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center gap-3 rounded-md border border-border bg-background/40 p-3">
+              {tiers.map((row) => (
+                <div
+                  key={row.label}
+                  className="flex items-center gap-3 rounded-md border border-border bg-background/40 p-3"
+                >
                   <span className={`h-2 w-2 rounded-full ${row.color}`} />
                   <div className="flex-1">
                     <div className="text-[13px] font-medium">{row.label}</div>
@@ -169,16 +167,16 @@ function Landing() {
       <section className="mx-auto max-w-5xl px-6 py-24">
         <div className="relative overflow-hidden rounded-2xl border border-border bg-surface px-10 py-14 text-center">
           <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-            Validate before you build.
+            {t("land.cta.title")}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[15px] text-muted-foreground">
-            One analysis can save a quarter of wasted engineering. Run yours in under a minute.
+            {t("land.cta.sub")}
           </p>
           <Link
             to="/analyze"
             className="mt-7 inline-flex h-11 items-center gap-2 rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
-            Start free analysis <ArrowRight className="h-4 w-4" />
+            {t("land.cta.btn")} <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
@@ -188,15 +186,7 @@ function Landing() {
   );
 }
 
-function SectionHeader({
-  eyebrow,
-  title,
-  sub,
-}: {
-  eyebrow: string;
-  title: string;
-  sub?: string;
-}) {
+function SectionHeader({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
   return (
     <div className="mx-auto max-w-2xl text-center">
       <div className="text-[12px] font-medium uppercase tracking-wider text-primary">{eyebrow}</div>
@@ -209,12 +199,13 @@ function SectionHeader({
 }
 
 function DashboardPreview() {
+  const { t } = useI18n();
   const bars = [
-    { label: "Market Demand", val: 72, tone: "success" },
-    { label: "Competition", val: 38, tone: "primary" },
-    { label: "Pricing", val: 58, tone: "warning" },
-    { label: "Distribution", val: 41, tone: "primary" },
-    { label: "Founder Advantage", val: 66, tone: "success" },
+    { label: t("dim.marketDemand"), val: 72, tone: "success" },
+    { label: t("dim.competition"), val: 38, tone: "primary" },
+    { label: t("dim.pricing"), val: 58, tone: "warning" },
+    { label: t("dim.distribution"), val: 41, tone: "primary" },
+    { label: t("dim.founderAdvantage"), val: 66, tone: "success" },
   ] as const;
 
   return (
@@ -231,14 +222,16 @@ function DashboardPreview() {
             </span>
           </div>
           <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
-            Live
+            {t("preview.live")}
           </span>
         </div>
         <div className="grid gap-6 p-8 md:grid-cols-[260px_1fr]">
           <div className="rounded-xl border border-border bg-background/40 p-6">
-            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Risk score</div>
+            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              {t("preview.risk")}
+            </div>
             <div className="mt-2 text-6xl font-semibold tabular-nums text-primary">68</div>
-            <div className="mt-1 text-sm text-muted-foreground">High risk · medium confidence</div>
+            <div className="mt-1 text-sm text-muted-foreground">{t("preview.riskNote")}</div>
             <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-border">
               <div className="h-full rounded-full bg-primary" style={{ width: "68%" }} />
             </div>
@@ -273,46 +266,3 @@ function DashboardPreview() {
     </div>
   );
 }
-
-const dimensions = [
-  {
-    icon: BarChart3,
-    eyebrow: "Market",
-    title: "Market Demand Analysis",
-    body: "Is there urgent, paid demand? We grade pull signal, market size, and timing.",
-  },
-  {
-    icon: Network,
-    eyebrow: "Competition",
-    title: "Competition Analysis",
-    body: "Density of the category, defensibility, and the realistic moat you can build.",
-  },
-  {
-    icon: Tag,
-    eyebrow: "Pricing",
-    title: "Pricing Analysis",
-    body: "Willingness-to-pay, anchor pricing, and the unit economics that follow.",
-  },
-  {
-    icon: Megaphone,
-    eyebrow: "Distribution",
-    title: "Distribution Analysis",
-    body: "The channels you can realistically own — and what CAC looks like there.",
-  },
-  {
-    icon: UserCheck,
-    eyebrow: "Founder",
-    title: "Founder Advantage Analysis",
-    body: "Founder-market fit, distribution edge, and the unfair advantage you bring.",
-  },
-  {
-    icon: ShieldCheck,
-    eyebrow: "Output",
-    title: "Calibrated Risk Score",
-    body: "A composite 0–100 score with confidence level and a structured rationale.",
-  },
-];
-
-void Sparkles;
-void LineChart;
-void Compass;
