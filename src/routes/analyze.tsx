@@ -32,7 +32,8 @@ export const Route = createFileRoute("/analyze")({
       { title: "Analyzer — FailWise" },
       {
         name: "description",
-        content: "Score your startup across market demand, competition, pricing, distribution, and founder advantage.",
+        content:
+          "Score your startup across market demand, competition, pricing, distribution, and founder advantage.",
       },
     ],
   }),
@@ -48,19 +49,30 @@ type HistoryItem = {
 };
 
 const HISTORY_KEY = "failwise.history.v2";
-const SAMPLES = [
-  "AI Notion for dental clinics",
-  "Uber for dog walkers in tier-3 cities",
-  "Subscription box for indie board games",
-  "No-code internal HR portals",
-];
+
+const SAMPLES_BY_LANG: Record<"en" | "tr", string[]> = {
+  en: [
+    "AI Notion for dental clinics",
+    "Uber for dog walkers in tier-3 cities",
+    "Subscription box for indie board games",
+    "No-code internal HR portals",
+  ],
+  tr: [
+    "Diş klinikleri için yapay zekâ destekli Notion",
+    "Küçük şehirlerde köpek gezdiriciler için Uber",
+    "Bağımsız kutu oyunları için abonelik kutusu",
+    "Şirket içi İK portalları için no-code platform",
+  ],
+};
 
 function AnalyzePage() {
   const analyze = useServerFn(analyzeStartup);
-  const { lang } = useI18n();
+  const { lang, t } = useI18n();
   const [idea, setIdea] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [active, setActive] = useState<HistoryItem | null>(null);
+
+  const samples = SAMPLES_BY_LANG[lang];
 
   useEffect(() => {
     try {
@@ -71,6 +83,7 @@ function AnalyzePage() {
     }
   }, []);
 
+  const failMsg = t("an.fail");
   const mutation = useMutation({
     mutationFn: async (input: string) => analyze({ data: { idea: input, lang } }),
     onSuccess: (analysis, input) => {
@@ -90,7 +103,7 @@ function AnalyzePage() {
         /* ignore */
       }
     },
-    onError: (err: Error) => toast.error(err?.message || "Analysis failed. Try again."),
+    onError: (err: Error) => toast.error(err?.message || failMsg),
   });
 
   const onSubmit = (e: React.FormEvent) => {
@@ -110,11 +123,11 @@ function AnalyzePage() {
         <aside className="hidden lg:block">
           <div className="sticky top-20 space-y-3">
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground">
-              <History className="h-3.5 w-3.5" /> History
+              <History className="h-3.5 w-3.5" /> {t("an.history")}
             </div>
             {history.length === 0 ? (
               <p className="rounded-md border border-dashed border-border p-4 text-[12px] text-muted-foreground">
-                Your analyzed ideas will appear here.
+                {t("an.historyEmpty")}
               </p>
             ) : (
               <ul className="space-y-1">
@@ -143,15 +156,12 @@ function AnalyzePage() {
         <main className="space-y-12">
           <section>
             <div className="text-[12px] font-medium uppercase tracking-wider text-primary">
-              Founder intelligence
+              {t("an.eyebrow")}
             </div>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
-              Run an analysis
+              {t("an.title")}
             </h1>
-            <p className="mt-2 max-w-2xl text-[15px] text-muted-foreground">
-              Drop in an idea or company. Get the risk score, dimension breakdown, pre-mortem, and
-              a rebuild plan.
-            </p>
+            <p className="mt-2 max-w-2xl text-[15px] text-muted-foreground">{t("an.sub")}</p>
 
             <form onSubmit={onSubmit} className="mt-6">
               <div className="rounded-xl border border-border bg-surface focus-within:border-border-strong">
@@ -159,12 +169,12 @@ function AnalyzePage() {
                   value={idea}
                   onChange={(e) => setIdea(e.target.value)}
                   rows={3}
-                  placeholder="e.g. A marketplace for freelance climate scientists…"
+                  placeholder={t("an.placeholder")}
                   className="w-full resize-none rounded-xl bg-transparent px-4 py-3.5 text-[15px] outline-none placeholder:text-muted-foreground"
                 />
                 <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-3 py-2.5">
                   <div className="flex flex-wrap gap-1.5">
-                    {SAMPLES.map((s) => (
+                    {samples.map((s) => (
                       <button
                         key={s}
                         type="button"
@@ -182,11 +192,11 @@ function AnalyzePage() {
                   >
                     {mutation.isPending ? (
                       <>
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" /> Analyzing…
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" /> {t("an.analyzing")}
                       </>
                     ) : (
                       <>
-                        Analyze <ArrowRight className="h-3.5 w-3.5" />
+                        {t("an.analyze")} <ArrowRight className="h-3.5 w-3.5" />
                       </>
                     )}
                   </button>
@@ -196,7 +206,7 @@ function AnalyzePage() {
           </section>
 
           {mutation.isPending && <AnalyzingState />}
-          {!mutation.isPending && !result && <EmptyState onPick={setIdea} />}
+          {!mutation.isPending && !result && <EmptyState onPick={setIdea} samples={samples} />}
           {result && active && <ResultsView idea={active.idea} analysis={result} />}
         </main>
       </div>
@@ -205,17 +215,18 @@ function AnalyzePage() {
 }
 
 function AnalyzingState() {
+  const { t } = useI18n();
   const steps = [
-    "Decomposing the idea",
-    "Scoring market demand",
-    "Mapping competition & moat",
-    "Modeling pricing & distribution",
-    "Synthesizing rebuild strategy",
+    t("an.step.1"),
+    t("an.step.2"),
+    t("an.step.3"),
+    t("an.step.4"),
+    t("an.step.5"),
   ];
   return (
     <div className="rounded-xl border border-border bg-surface p-7">
       <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
-        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" /> Running intelligence pass…
+        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" /> {t("an.steps.title")}
       </div>
       <ul className="mt-6 space-y-3">
         {steps.map((s, i) => (
@@ -235,18 +246,17 @@ function AnalyzingState() {
   );
 }
 
-function EmptyState({ onPick }: { onPick: (s: string) => void }) {
+function EmptyState({ onPick, samples }: { onPick: (s: string) => void; samples: string[] }) {
+  const { t } = useI18n();
   return (
     <div className="rounded-xl border border-dashed border-border bg-surface/40 p-10 text-center">
       <div className="mx-auto grid h-10 w-10 place-items-center rounded-md border border-border bg-surface text-muted-foreground">
         <Sparkles className="h-4 w-4" />
       </div>
-      <h3 className="mt-4 text-lg font-semibold">Ready when you are</h3>
-      <p className="mx-auto mt-2 max-w-md text-[13px] text-muted-foreground">
-        Try one of these to see how FailWise breaks an idea down.
-      </p>
+      <h3 className="mt-4 text-lg font-semibold">{t("an.empty.title")}</h3>
+      <p className="mx-auto mt-2 max-w-md text-[13px] text-muted-foreground">{t("an.empty.sub")}</p>
       <div className="mt-5 flex flex-wrap justify-center gap-2">
-        {SAMPLES.map((s) => (
+        {samples.map((s) => (
           <button
             key={s}
             onClick={() => onPick(s)}
@@ -260,26 +270,30 @@ function EmptyState({ onPick }: { onPick: (s: string) => void }) {
   );
 }
 
-const DIM_META = {
-  marketDemand: { label: "Market Demand", icon: BarChart3 },
-  competition: { label: "Competition", icon: Network },
-  pricing: { label: "Pricing", icon: Tag },
-  distribution: { label: "Distribution", icon: Megaphone },
-  founderAdvantage: { label: "Founder Advantage", icon: UserCheck },
-} as const;
-
 function ResultsView({ idea, analysis }: { idea: string; analysis: StartupAnalysis }) {
-  const copyInsight = async () => {
-    const text = `FailWise analysis · "${idea}"
-Risk score: ${analysis.riskScore}/100 (${analysis.confidence} confidence)
-Top risk: ${analysis.topFailureReason}
+  const { t } = useI18n();
 
-Powered by FailWise — founder intelligence platform`;
+  const DIM_META = {
+    marketDemand: { label: t("dim.marketDemand"), icon: BarChart3 },
+    competition: { label: t("dim.competition"), icon: Network },
+    pricing: { label: t("dim.pricing"), icon: Tag },
+    distribution: { label: t("dim.distribution"), icon: Megaphone },
+    founderAdvantage: { label: t("dim.founderAdvantage"), icon: UserCheck },
+  } as const;
+
+  const copiedMsg = t("an.copied");
+  const copyFailMsg = t("an.copyFail");
+  const copyInsight = async () => {
+    const text = `FailWise · "${idea}"
+${t("risk.scoreLabel")}: ${analysis.riskScore}/100 (${t(`conf.${analysis.confidence}`)} ${t("an.confidence")})
+${t("risk.topRisk")}: ${analysis.topFailureReason}
+
+FailWise — ${t("risk.platform")}`;
     try {
       await navigator.clipboard.writeText(text);
-      toast.success("Copied to clipboard");
+      toast.success(copiedMsg);
     } catch {
-      toast.error("Copy failed");
+      toast.error(copyFailMsg);
     }
   };
 
@@ -300,7 +314,7 @@ Powered by FailWise — founder intelligence platform`;
       <div className="grid gap-5 lg:grid-cols-[1fr_1.05fr]">
         <div className="rounded-xl border border-border bg-surface p-7">
           <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-            Verdict · {analysis.confidence} confidence
+            {t("an.verdict")} · {t(`conf.${analysis.confidence}`)} {t("an.confidence")}
           </div>
           <h2 className="mt-3 text-2xl font-semibold leading-snug tracking-tight">
             {analysis.verdict}
@@ -313,7 +327,7 @@ Powered by FailWise — founder intelligence platform`;
               onClick={copyInsight}
               className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background/40 px-3 text-[12px] hover:border-border-strong"
             >
-              <Copy className="h-3 w-3" /> Copy insight
+              <Copy className="h-3 w-3" /> {t("an.copy")}
             </button>
             <ShareButton idea={idea} score={analysis.riskScore} />
           </div>
@@ -322,7 +336,7 @@ Powered by FailWise — founder intelligence platform`;
       </div>
 
       {/* Dimensions */}
-      <Section title="Intelligence Breakdown" subtitle="Scores across the five viability dimensions.">
+      <Section title={t("an.dim.title")} subtitle={t("an.dim.sub")}>
         <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {(Object.keys(DIM_META) as Array<keyof typeof DIM_META>).map((k) => {
             const dim = analysis.dimensions[k];
@@ -333,9 +347,7 @@ Powered by FailWise — founder intelligence platform`;
                 ? "bg-success"
                 : dim.signal === "neutral"
                   ? "bg-warning"
-                  : dim.signal === "weak"
-                    ? "bg-primary"
-                    : "bg-primary";
+                  : "bg-primary";
             return (
               <div key={k} className="bg-surface p-6">
                 <div className="flex items-center justify-between">
@@ -355,7 +367,7 @@ Powered by FailWise — founder intelligence platform`;
                   {dim.detail}
                 </p>
                 <div className="mt-4 inline-flex items-center rounded-full border border-border bg-background/40 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
-                  {dim.signal} signal
+                  {t(`sig.${dim.signal}`)} {t("an.signal")}
                 </div>
               </div>
             );
@@ -364,11 +376,7 @@ Powered by FailWise — founder intelligence platform`;
       </Section>
 
       {/* Failure breakdown */}
-      <Section
-        icon={AlertTriangle}
-        title="Risk Breakdown"
-        subtitle="Specific risks to address before building."
-      >
+      <Section icon={AlertTriangle} title={t("an.risks.title")} subtitle={t("an.risks.sub")}>
         <div className="grid gap-3 md:grid-cols-2">
           {analysis.failureBreakdown.map((f, i) => (
             <div key={i} className="rounded-xl border border-border bg-surface p-5">
@@ -379,7 +387,7 @@ Powered by FailWise — founder intelligence platform`;
                 <span
                   className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase ${sevColor[f.severity]}`}
                 >
-                  {f.severity}
+                  {t(`sev.${f.severity}`)}
                 </span>
               </div>
               <div className="mt-2 text-[15px] font-medium">{f.issue}</div>
@@ -390,7 +398,7 @@ Powered by FailWise — founder intelligence platform`;
       </Section>
 
       {/* Pre-mortem */}
-      <Section icon={Clock} title="Pre-Mortem" subtitle="How this fails over the next 12 months.">
+      <Section icon={Clock} title={t("an.pm.title")} subtitle={t("an.pm.sub")}>
         <ol className="relative space-y-5 border-l border-border pl-6">
           {analysis.preMortem.map((p, i) => (
             <li key={i} className="relative">
@@ -406,16 +414,16 @@ Powered by FailWise — founder intelligence platform`;
       </Section>
 
       {/* Rebuild */}
-      <Section icon={Wand2} title="Rebuild Strategy" subtitle="The version of this that could actually win.">
+      <Section icon={Wand2} title={t("an.rb.title")} subtitle={t("an.rb.sub")}>
         <div className="grid gap-3 md:grid-cols-2">
-          <RebuildCard label="New positioning" text={analysis.rebuild.positioning} />
-          <RebuildCard label="Sharper audience" text={analysis.rebuild.targetAudience} />
-          <RebuildCard label="Pricing strategy" text={analysis.rebuild.pricingStrategy} />
-          <RebuildCard label="Go-to-market" text={analysis.rebuild.gtmStrategy} />
+          <RebuildCard label={t("an.rb.positioning")} text={analysis.rebuild.positioning} />
+          <RebuildCard label={t("an.rb.audience")} text={analysis.rebuild.targetAudience} />
+          <RebuildCard label={t("an.rb.pricing")} text={analysis.rebuild.pricingStrategy} />
+          <RebuildCard label={t("an.rb.gtm")} text={analysis.rebuild.gtmStrategy} />
         </div>
         <div className="mt-4 rounded-xl border border-border bg-surface p-6">
           <div className="flex items-center gap-2 text-[13px] font-medium">
-            <Rocket className="h-3.5 w-3.5 text-success" /> MVP roadmap
+            <Rocket className="h-3.5 w-3.5 text-success" /> {t("an.rb.mvp")}
           </div>
           <ol className="mt-4 space-y-2.5">
             {analysis.rebuild.mvpRoadmap.map((step, i) => (
@@ -430,9 +438,7 @@ Powered by FailWise — founder intelligence platform`;
         </div>
       </Section>
 
-      <p className="pt-2 text-center text-[11px] text-muted-foreground">
-        FailWise insights are AI-generated. Use as a sharpening tool, not gospel.
-      </p>
+      <p className="pt-2 text-center text-[11px] text-muted-foreground">{t("an.disclaimer")}</p>
     </div>
   );
 }
@@ -472,8 +478,9 @@ function RebuildCard({ label, text }: { label: string; text: string }) {
 }
 
 function ShareButton({ idea, score }: { idea: string; score: number }) {
+  const { t } = useI18n();
   const text = encodeURIComponent(
-    `My startup idea scored ${score}/100 on FailWise:\n\n"${idea}"\n\nFind your startup's risk score 👇`,
+    `FailWise: "${idea}" → ${score}/100\n\nfailwise.ai`,
   );
   const url = "https://failwise.ai";
   return (
@@ -483,7 +490,7 @@ function ShareButton({ idea, score }: { idea: string; score: number }) {
       href={`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`}
       className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background/40 px-3 text-[12px] hover:border-border-strong"
     >
-      Share on X
+      {t("an.share")}
     </a>
   );
 }
