@@ -172,6 +172,35 @@ const en: Dict = {
   "auth.success.signedUp": "Account created.",
 
   "lang.switch": "Language",
+
+  // Pricing
+  "pricing.badge": "Simple, founder-friendly pricing",
+  "pricing.title": "Pay less than one bad sprint.",
+  "pricing.sub": "One avoided dead-end pays for years of FailWise.",
+  "pricing.mostPopular": "Most popular",
+  "pricing.cadence.forever": "forever",
+  "pricing.cadence.month": "/month",
+  "pricing.free.name": "Free",
+  "pricing.free.f1": "1 analysis per month",
+  "pricing.free.f2": "Basic failure explanation",
+  "pricing.free.f3": "Limited results access",
+  "pricing.free.f4": "Watermark on share cards",
+  "pricing.free.cta": "Start free",
+  "pricing.pro.name": "Pro",
+  "pricing.pro.f1": "Unlimited startup analyses",
+  "pricing.pro.f2": "Full failure breakdown engine",
+  "pricing.pro.f3": "Risk score + insights",
+  "pricing.pro.f4": "Pre-mortem simulation",
+  "pricing.pro.f5": "Shareable cards (no watermark)",
+  "pricing.pro.cta": "Get Pro",
+  "pricing.expert.name": "Expert",
+  "pricing.expert.f1": "Everything in Pro",
+  "pricing.expert.f2": "Advanced 6–12 month pre-mortem",
+  "pricing.expert.f3": "Full rebuild engine (MVP + pricing + GTM)",
+  "pricing.expert.f4": "Investor-style PDF reports",
+  "pricing.expert.f5": "Competitor failure comparisons",
+  "pricing.expert.f6": "Weekly startup risk insights",
+  "pricing.expert.cta": "Go Expert",
 };
 
 const tr: Dict = {
@@ -342,6 +371,35 @@ const tr: Dict = {
   "auth.success.signedUp": "Hesap oluşturuldu.",
 
   "lang.switch": "Dil",
+
+  // Pricing
+  "pricing.badge": "Basit, kurucu dostu fiyatlandırma",
+  "pricing.title": "Kötü bir sprint'ten daha az öde.",
+  "pricing.sub": "Kaçırılan tek bir çıkmaz sokak, yıllarca FailWise'ın parasını çıkarır.",
+  "pricing.mostPopular": "En popüler",
+  "pricing.cadence.forever": "sonsuza dek",
+  "pricing.cadence.month": "/ay",
+  "pricing.free.name": "Ücretsiz",
+  "pricing.free.f1": "Ayda 1 analiz",
+  "pricing.free.f2": "Temel başarısızlık açıklaması",
+  "pricing.free.f3": "Sınırlı sonuç erişimi",
+  "pricing.free.f4": "Paylaşım kartlarında filigran",
+  "pricing.free.cta": "Ücretsiz başla",
+  "pricing.pro.name": "Pro",
+  "pricing.pro.f1": "Sınırsız startup analizi",
+  "pricing.pro.f2": "Tam başarısızlık kırılım motoru",
+  "pricing.pro.f3": "Risk skoru + içgörüler",
+  "pricing.pro.f4": "Ön-mortem simülasyonu",
+  "pricing.pro.f5": "Paylaşılabilir kartlar (filigransız)",
+  "pricing.pro.cta": "Pro'ya geç",
+  "pricing.expert.name": "Uzman",
+  "pricing.expert.f1": "Pro'daki her şey",
+  "pricing.expert.f2": "Gelişmiş 6–12 aylık ön-mortem",
+  "pricing.expert.f3": "Tam yeniden kurma motoru (MVP + fiyat + GTM)",
+  "pricing.expert.f4": "Yatırımcı tarzı PDF raporlar",
+  "pricing.expert.f5": "Rakip başarısızlık karşılaştırmaları",
+  "pricing.expert.f6": "Haftalık startup risk içgörüleri",
+  "pricing.expert.cta": "Uzman'a geç",
 };
 
 const dicts: Record<Lang, Dict> = { en, tr };
