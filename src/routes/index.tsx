@@ -12,7 +12,9 @@ import {
 } from "lucide-react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { Hero3D } from "@/components/hero-3d";
 import { useI18n } from "@/lib/i18n";
+import { ClientOnly } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -65,7 +67,12 @@ function Landing() {
 
       {/* Hero */}
       <section className="relative mx-auto max-w-6xl px-6 pt-20 pb-24">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <ClientOnly fallback={null}>
+            <Hero3D />
+          </ClientOnly>
+        </div>
+        <div className="relative mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-3 py-1 text-[12px] text-muted-foreground backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" />
             {t("hero.badge")}
