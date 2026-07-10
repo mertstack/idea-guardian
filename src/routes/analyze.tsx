@@ -23,6 +23,7 @@ import { toast } from "sonner";
 
 import { RiskCard } from "@/components/risk-card";
 import { SiteHeader } from "@/components/site-chrome";
+import { Tilt3D } from "@/components/tilt-3d";
 import { useI18n } from "@/lib/i18n";
 import { analyzeStartup, type StartupAnalysis } from "@/lib/analyze.functions";
 
@@ -312,32 +313,36 @@ FailWise — ${t("risk.platform")}`;
     <div className="space-y-10" style={{ animation: "fade-in 400ms ease-out" }}>
       {/* Verdict + risk card */}
       <div className="grid gap-5 lg:grid-cols-[1fr_1.05fr]">
-        <div className="rounded-xl border border-border bg-surface p-7">
-          <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-            {t("an.verdict")} · {t(`conf.${analysis.confidence}`)} {t("an.confidence")}
+        <Tilt3D max={6}>
+          <div className="p-7">
+            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              {t("an.verdict")} · {t(`conf.${analysis.confidence}`)} {t("an.confidence")}
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold leading-snug tracking-tight">
+              {analysis.verdict}
+            </h2>
+            <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
+              {analysis.ideaSummary}
+            </p>
+            <div className="mt-6 flex gap-2">
+              <button
+                onClick={copyInsight}
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background/40 px-3 text-[12px] hover:border-border-strong"
+              >
+                <Copy className="h-3 w-3" /> {t("an.copy")}
+              </button>
+              <ShareButton idea={idea} score={analysis.riskScore} />
+            </div>
           </div>
-          <h2 className="mt-3 text-2xl font-semibold leading-snug tracking-tight">
-            {analysis.verdict}
-          </h2>
-          <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
-            {analysis.ideaSummary}
-          </p>
-          <div className="mt-6 flex gap-2">
-            <button
-              onClick={copyInsight}
-              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background/40 px-3 text-[12px] hover:border-border-strong"
-            >
-              <Copy className="h-3 w-3" /> {t("an.copy")}
-            </button>
-            <ShareButton idea={idea} score={analysis.riskScore} />
-          </div>
-        </div>
-        <RiskCard idea={idea} score={analysis.riskScore} reason={analysis.topFailureReason} />
+        </Tilt3D>
+        <Tilt3D max={6}>
+          <RiskCard idea={idea} score={analysis.riskScore} reason={analysis.topFailureReason} />
+        </Tilt3D>
       </div>
 
       {/* Dimensions */}
       <Section title={t("an.dim.title")} subtitle={t("an.dim.sub")}>
-        <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {(Object.keys(DIM_META) as Array<keyof typeof DIM_META>).map((k) => {
             const dim = analysis.dimensions[k];
             const meta = DIM_META[k];
@@ -349,27 +354,29 @@ FailWise — ${t("risk.platform")}`;
                   ? "bg-warning"
                   : "bg-primary";
             return (
-              <div key={k} className="bg-surface p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[12px] uppercase tracking-wider text-muted-foreground">
-                    <Icon className="h-3.5 w-3.5" />
-                    {meta.label}
+              <Tilt3D key={k}>
+                <div className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[12px] uppercase tracking-wider text-muted-foreground">
+                      <Icon className="h-3.5 w-3.5" />
+                      {meta.label}
+                    </div>
+                    <span className="font-mono text-sm tabular-nums text-foreground">
+                      {dim.score}
+                    </span>
                   </div>
-                  <span className="font-mono text-sm tabular-nums text-foreground">
-                    {dim.score}
-                  </span>
+                  <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-border">
+                    <div className={`h-full rounded-full ${tone}`} style={{ width: `${dim.score}%` }} />
+                  </div>
+                  <div className="mt-4 text-[14px] font-medium">{dim.insight}</div>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
+                    {dim.detail}
+                  </p>
+                  <div className="mt-4 inline-flex items-center rounded-full border border-border bg-background/40 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {t(`sig.${dim.signal}`)} {t("an.signal")}
+                  </div>
                 </div>
-                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-border">
-                  <div className={`h-full rounded-full ${tone}`} style={{ width: `${dim.score}%` }} />
-                </div>
-                <div className="mt-4 text-[14px] font-medium">{dim.insight}</div>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
-                  {dim.detail}
-                </p>
-                <div className="mt-4 inline-flex items-center rounded-full border border-border bg-background/40 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
-                  {t(`sig.${dim.signal}`)} {t("an.signal")}
-                </div>
-              </div>
+              </Tilt3D>
             );
           })}
         </div>
@@ -377,22 +384,24 @@ FailWise — ${t("risk.platform")}`;
 
       {/* Failure breakdown */}
       <Section icon={AlertTriangle} title={t("an.risks.title")} subtitle={t("an.risks.sub")}>
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {analysis.failureBreakdown.map((f, i) => (
-            <div key={i} className="rounded-xl border border-border bg-surface p-5">
-              <div className="flex items-center justify-between">
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                  {f.category}
+            <Tilt3D key={i}>
+              <div className="p-5">
+                <div className="flex items-center justify-between">
+                  <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                    {f.category}
+                  </div>
+                  <span
+                    className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase ${sevColor[f.severity]}`}
+                  >
+                    {t(`sev.${f.severity}`)}
+                  </span>
                 </div>
-                <span
-                  className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase ${sevColor[f.severity]}`}
-                >
-                  {t(`sev.${f.severity}`)}
-                </span>
+                <div className="mt-2 text-[15px] font-medium">{f.issue}</div>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{f.detail}</p>
               </div>
-              <div className="mt-2 text-[15px] font-medium">{f.issue}</div>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{f.detail}</p>
-            </div>
+            </Tilt3D>
           ))}
         </div>
       </Section>
