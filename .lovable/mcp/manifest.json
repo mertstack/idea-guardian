@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "sdk_version": "0.23.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://urroqcwnsdnqdlcceqdo.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "failwise-mcp",
+      "version": "0.1.0",
+      "title": "FailWise MCP"
+    },
+    "tools": [
+      {
+        "name": "analyze_startup",
+        "title": "Analyze startup idea",
+        "description": "Run a FailWise founder-intelligence analysis on a startup idea or company. Returns a risk score (0-100), a verdict, five dimension scores (market demand, competition, pricing, distribution, founder advantage), a failure breakdown, a pre-mortem timeline, and a rebuild plan.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": false,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "idea": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000,
+              "description": "The startup idea, product concept, or company name to analyze."
+            },
+            "lang": {
+              "description": "Output language. 'en' (default) for English, 'tr' for Turkish.",
+              "type": "string",
+              "enum": [
+                "en",
+                "tr"
+              ]
+            }
+          },
+          "required": [
+            "idea"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
