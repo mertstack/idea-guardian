@@ -15,21 +15,32 @@ export const Route = createFileRoute("/auth")({
       { name: "description", content: "Sign in or create your FailWise account." },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" ? s.next : undefined,
+  }),
   component: AuthPage,
 });
+
+// Only allow same-origin relative paths so an attacker can't send users elsewhere.
+function safeNext(next: string | undefined): string {
+  if (!next || !next.startsWith("/") || next.startsWith("//")) return "/analyze";
+  return next;
+}
 
 function AuthPage() {
   const { t, lang, setLang } = useI18n();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
+  const target = safeNext(next);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/analyze" });
-  }, [user, loading, navigate]);
+    if (!loading && user) window.location.href = target;
+  }, [user, loading, target]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,12 +54,12 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/analyze" },
+          options: { emailRedirectTo: window.location.origin + target },
         });
         if (error) throw error;
         toast.success(t("auth.success.signedUp"));
       }
-      navigate({ to: "/analyze" });
+      window.location.href = target;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.error.generic"));
     } finally {
@@ -60,7 +71,7 @@ function AuthPage() {
     setBusy(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin + "/analyze",
+        redirect_uri: window.location.origin + target,
       });
       if (result.error) {
         toast.error(result.error.message || t("auth.error.generic"));
@@ -68,7 +79,7 @@ function AuthPage() {
         return;
       }
       if (result.redirected) return;
-      navigate({ to: "/analyze" });
+      window.location.href = target;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("auth.error.generic"));
       setBusy(false);
