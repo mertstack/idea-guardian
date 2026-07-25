@@ -1,4 +1,5 @@
 import { generateText } from "ai";
+import process from "node:process";
 import { z } from "zod";
 
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
