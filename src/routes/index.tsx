@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "FailWise — Founder intelligence platform" },
       {
         property: "og:description",
-        content: "AI startup intelligence: risk score, pre-mortem, and rebuild plan.",
+        content: "FailWise is the founder intelligence platform. Score your idea on market demand, competition, pricing, distribution, and founder advantage before you build.",
       },
     ],
   }),

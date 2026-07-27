@@ -80,19 +80,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FailWise — Don't build what will fail" },
+      { title: "FailWise — Founder intelligence platform" },
       {
         name: "description",
         content:
-          "AI startup intelligence that analyzes your idea for failure risk before you waste time and money.",
+          "FailWise is the founder intelligence platform. Score your idea on market demand, competition, pricing, distribution, and founder advantage before you build.",
       },
-      { property: "og:title", content: "FailWise — Startup failure intelligence" },
+      { property: "og:title", content: "FailWise — Founder intelligence platform" },
       {
         property: "og:description",
-        content: "AI that analyzes your startup before you build it.",
+        content: "FailWise is the founder intelligence platform. Score your idea on market demand, competition, pricing, distribution, and founder advantage before you build.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "FailWise — Founder intelligence platform" },
+      { name: "twitter:description", content: "FailWise is the founder intelligence platform. Score your idea on market demand, competition, pricing, distribution, and founder advantage before you build." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/415518cc-6c52-4bca-9246-4977aa98c705" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/415518cc-6c52-4bca-9246-4977aa98c705" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
