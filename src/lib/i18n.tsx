@@ -201,7 +201,12 @@ const en: Dict = {
   "pricing.expert.f5": "Competitor failure comparisons",
   "pricing.expert.f6": "Weekly startup risk insights",
   "pricing.expert.cta": "Go Expert",
+  "meta.title.home": "FailWise — Founder intelligence platform",
+  "meta.title.analyze": "Analyzer — FailWise",
+  "meta.title.pricing": "Pricing — FailWise",
+  "meta.title.auth": "FailWise — Sign in",
 };
+
 
 const tr: Dict = {
   // Nav
@@ -400,7 +405,12 @@ const tr: Dict = {
   "pricing.expert.f5": "Rakip başarısızlık karşılaştırmaları",
   "pricing.expert.f6": "Haftalık startup risk içgörüleri",
   "pricing.expert.cta": "Uzman'a geç",
+  "meta.title.home": "FailWise — Kurucu zekâsı platformu",
+  "meta.title.analyze": "Analiz — FailWise",
+  "meta.title.pricing": "Fiyatlandırma — FailWise",
+  "meta.title.auth": "FailWise — Giriş yap",
 };
+
 
 const dicts: Record<Lang, Dict> = { en, tr };
 
@@ -423,6 +433,23 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       /* noop */
     }
   }, []);
+
+  // Keep <html lang> and the document title localized
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.lang = lang;
+    const path = window.location.pathname;
+    const key = path.startsWith("/analyze")
+      ? "meta.title.analyze"
+      : path.startsWith("/pricing")
+        ? "meta.title.pricing"
+        : path.startsWith("/auth")
+          ? "meta.title.auth"
+          : "meta.title.home";
+    document.title = dicts[lang][key] ?? dicts.en[key];
+  }, [lang]);
+
+
 
   const value = useMemo<I18nCtx>(() => {
     return {
