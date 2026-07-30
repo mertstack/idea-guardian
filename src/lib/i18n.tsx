@@ -405,7 +405,12 @@ const tr: Dict = {
   "pricing.expert.f5": "Rakip başarısızlık karşılaştırmaları",
   "pricing.expert.f6": "Haftalık startup risk içgörüleri",
   "pricing.expert.cta": "Uzman'a geç",
+  "meta.title.home": "FailWise — Kurucu zekâsı platformu",
+  "meta.title.analyze": "Analiz — FailWise",
+  "meta.title.pricing": "Fiyatlandırma — FailWise",
+  "meta.title.auth": "FailWise — Giriş yap",
 };
+
 
 const dicts: Record<Lang, Dict> = { en, tr };
 
