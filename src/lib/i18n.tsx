@@ -434,6 +434,23 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Keep <html lang> and the document title localized
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.lang = lang;
+    const path = window.location.pathname;
+    const key = path.startsWith("/analyze")
+      ? "meta.title.analyze"
+      : path.startsWith("/pricing")
+        ? "meta.title.pricing"
+        : path.startsWith("/auth")
+          ? "meta.title.auth"
+          : "meta.title.home";
+    document.title = dicts[lang][key] ?? dicts.en[key];
+  }, [lang]);
+
+
+
   const value = useMemo<I18nCtx>(() => {
     return {
       lang,
