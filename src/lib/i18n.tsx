@@ -201,7 +201,12 @@ const en: Dict = {
   "pricing.expert.f5": "Competitor failure comparisons",
   "pricing.expert.f6": "Weekly startup risk insights",
   "pricing.expert.cta": "Go Expert",
+  "meta.title.home": "FailWise — Founder intelligence platform",
+  "meta.title.analyze": "Analyzer — FailWise",
+  "meta.title.pricing": "Pricing — FailWise",
+  "meta.title.auth": "FailWise — Sign in",
 };
+
 
 const tr: Dict = {
   // Nav
