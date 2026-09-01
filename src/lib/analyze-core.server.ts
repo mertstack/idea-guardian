@@ -16,6 +16,7 @@ export const AnalysisSchema = z.object({
   riskScore: z.number().min(0).max(100),
   confidence: z.enum(["low", "medium", "high"]),
   verdict: z.string(),
+  recommendation: z.string(),
   topFailureReason: z.string(),
   dimensions: z.object({
     marketDemand: DimensionSchema,
@@ -87,8 +88,8 @@ export async function runAnalysis(idea: string, lang: "en" | "tr" = "en"): Promi
     : `Analyze this startup idea or company:\n\n"""${idea}"""\n\nReturn a SINGLE JSON object (no prose, no code fences) with this exact shape:`;
 
   const tail = isTr
-    ? '4-6 risk maddesi, 5-6 ön-mortem maddesi ("Ay 1", "Ay 3" gibi), 4-5 adımlık MVP yol haritası. Boyut puanları: YÜKSEK = DAHA GÜÇLÜ sinyal (o boyutta daha az risk). riskScore: 0-100, yüksek = başarısız olma olasılığı yüksek.'
-    : '4-6 risks, 5-6 pre-mortem items ("Month 1", "Month 3"), 4-5 step MVP roadmap. Dimension scores: HIGHER = STRONGER signal (less risk). riskScore: 0-100, higher = more likely to fail.';
+    ? 'recommendation: 1-2 cümlelik net ve uygulanabilir tavsiye — fikre devam mı, pivot mu, küçültüp test mi edileceğini söyle. 4-6 risk maddesi, 5-6 ön-mortem maddesi ("Ay 1", "Ay 3" gibi), 4-5 adımlık MVP yol haritası. Boyut puanları: YÜKSEK = DAHA GÜÇLÜ sinyal (o boyutta daha az risk). riskScore: 0-100, yüksek = başarısız olma olasılığı yüksek.'
+    : 'recommendation: 1-2 sentence clear, actionable advice — push ahead, pivot, or test smaller. 4-6 risks, 5-6 pre-mortem items ("Month 1", "Month 3"), 4-5 step MVP roadmap. Dimension scores: HIGHER = STRONGER signal (less risk). riskScore: 0-100, higher = more likely to fail.';
 
   const { text } = await generateText({
     model: gateway("google/gemini-3-flash-preview"),
@@ -99,6 +100,7 @@ export async function runAnalysis(idea: string, lang: "en" | "tr" = "en"): Promi
   "riskScore": number,
   "confidence": "low" | "medium" | "high",
   "verdict": string,
+  "recommendation": string,
   "topFailureReason": string,
   "dimensions": {
     "marketDemand":     { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
