@@ -314,16 +314,54 @@ FailWise — ${t("risk.platform")}`;
       {/* Verdict + risk card */}
       <div className="grid gap-5 lg:grid-cols-[1fr_1.05fr]">
         <Tilt3D max={6}>
-          <div className="p-7">
-            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-              {t("an.verdict")} · {t(`conf.${analysis.confidence}`)} {t("an.confidence")}
+          <div className="relative overflow-hidden p-7">
+            {/* ambient accent */}
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-px"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, rgba(255,90,95,.55), transparent)",
+              }}
+            />
+            <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-primary/[.07] blur-3xl" />
+
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/50 px-2.5 py-1 text-[11px] uppercase tracking-wider text-muted-foreground">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                {t("an.verdict")}
+              </span>
+              <span className="inline-flex items-center rounded-full border border-border bg-background/50 px-2.5 py-1 text-[11px] uppercase tracking-wider text-muted-foreground">
+                {t(`conf.${analysis.confidence}`)} {t("an.confidence")}
+              </span>
             </div>
-            <h2 className="mt-3 text-2xl font-semibold leading-snug tracking-tight">
+
+            <h2 className="mt-5 text-[22px] font-semibold leading-[1.4] tracking-tight text-balance">
+              <span className="mr-1 select-none font-mono text-primary">“</span>
               {analysis.verdict}
+              <span className="ml-1 select-none font-mono text-primary">”</span>
             </h2>
-            <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
-              {analysis.ideaSummary}
-            </p>
+
+            <div className="mt-5 rounded-lg border border-border/70 bg-background/40 p-4">
+              <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[.14em] text-muted-foreground/80">
+                {t("an.ideaSummary")}
+              </div>
+              <p className="text-[13.5px] leading-relaxed text-muted-foreground">
+                {analysis.ideaSummary}
+              </p>
+            </div>
+
+            {analysis.recommendation && (
+              <div className="mt-4 rounded-lg border border-primary/25 bg-primary/[.06] p-4">
+                <div className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.14em] text-primary">
+                  <Sparkles className="h-3 w-3" />
+                  {t("an.recommendation")}
+                </div>
+                <p className="text-[13.5px] leading-relaxed text-foreground/90">
+                  {analysis.recommendation}
+                </p>
+              </div>
+            )}
+
             <div className="mt-6 flex gap-2">
               <button
                 onClick={copyInsight}
@@ -447,7 +485,13 @@ FailWise — ${t("risk.platform")}`;
         </div>
       </Section>
 
-      <p className="pt-2 text-center text-[11px] text-muted-foreground">{t("an.disclaimer")}</p>
+      <div className="mx-auto max-w-2xl rounded-xl border border-border/70 bg-surface/60 px-6 py-4 text-center">
+        <div className="mb-1 flex items-center justify-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          <AlertTriangle className="h-3 w-3 text-warning" />
+          {t("an.disclaimerTitle")}
+        </div>
+        <p className="text-[12px] leading-relaxed text-muted-foreground">{t("an.disclaimer")}</p>
+      </div>
     </div>
   );
 }
