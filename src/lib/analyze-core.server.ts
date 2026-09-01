@@ -88,8 +88,8 @@ export async function runAnalysis(idea: string, lang: "en" | "tr" = "en"): Promi
     : `Analyze this startup idea or company:\n\n"""${idea}"""\n\nReturn a SINGLE JSON object (no prose, no code fences) with this exact shape:`;
 
   const tail = isTr
-    ? '4-6 risk maddesi, 5-6 ön-mortem maddesi ("Ay 1", "Ay 3" gibi), 4-5 adımlık MVP yol haritası. Boyut puanları: YÜKSEK = DAHA GÜÇLÜ sinyal (o boyutta daha az risk). riskScore: 0-100, yüksek = başarısız olma olasılığı yüksek.'
-    : '4-6 risks, 5-6 pre-mortem items ("Month 1", "Month 3"), 4-5 step MVP roadmap. Dimension scores: HIGHER = STRONGER signal (less risk). riskScore: 0-100, higher = more likely to fail.';
+    ? 'recommendation: 1-2 cümlelik net ve uygulanabilir tavsiye — fikre devam mı, pivot mu, küçültüp test mi edileceğini söyle. 4-6 risk maddesi, 5-6 ön-mortem maddesi ("Ay 1", "Ay 3" gibi), 4-5 adımlık MVP yol haritası. Boyut puanları: YÜKSEK = DAHA GÜÇLÜ sinyal (o boyutta daha az risk). riskScore: 0-100, yüksek = başarısız olma olasılığı yüksek.'
+    : 'recommendation: 1-2 sentence clear, actionable advice — push ahead, pivot, or test smaller. 4-6 risks, 5-6 pre-mortem items ("Month 1", "Month 3"), 4-5 step MVP roadmap. Dimension scores: HIGHER = STRONGER signal (less risk). riskScore: 0-100, higher = more likely to fail.';
 
   const { text } = await generateText({
     model: gateway("google/gemini-3-flash-preview"),
