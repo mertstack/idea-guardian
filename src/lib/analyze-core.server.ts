@@ -16,6 +16,7 @@ export const AnalysisSchema = z.object({
   riskScore: z.number().min(0).max(100),
   confidence: z.enum(["low", "medium", "high"]),
   verdict: z.string(),
+  recommendation: z.string(),
   topFailureReason: z.string(),
   dimensions: z.object({
     marketDemand: DimensionSchema,
@@ -99,6 +100,7 @@ export async function runAnalysis(idea: string, lang: "en" | "tr" = "en"): Promi
   "riskScore": number,
   "confidence": "low" | "medium" | "high",
   "verdict": string,
+  "recommendation": string,
   "topFailureReason": string,
   "dimensions": {
     "marketDemand":     { "score": number, "signal": "strong"|"neutral"|"weak"|"critical", "insight": string, "detail": string },
