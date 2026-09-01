@@ -116,6 +116,7 @@ const en: Dict = {
   "an.rb.pricing": "Pricing strategy",
   "an.rb.gtm": "Go-to-market",
   "an.rb.mvp": "MVP roadmap",
+  "an.disclaimerTitle": "Disclaimer",
   "an.disclaimer": "Proceed with caution. FailWise insights are AI-generated and do not constitute financial, legal, or business advice. Final decisions are your responsibility — FailWise assumes no liability.",
   "an.fail": "Analysis failed. Try again.",
 
@@ -321,6 +322,7 @@ const tr: Dict = {
   "an.rb.pricing": "Fiyatlandırma stratejisi",
   "an.rb.gtm": "Pazara giriş",
   "an.rb.mvp": "MVP yol haritası",
+  "an.disclaimerTitle": "Yasal Uyarı",
   "an.disclaimer": "Lütfen dikkatli olun. FailWise içgörüleri yapay zekâ tarafından üretilir; finansal, hukuki veya ticari tavsiye niteliği taşımaz. Nihai kararlar sizin sorumluluğunuzdadır — FailWise sonuçlardan sorumlu tutulamaz.",
   "an.fail": "Analiz başarısız oldu. Tekrar dene.",
 
