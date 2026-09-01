@@ -97,6 +97,7 @@ const en: Dict = {
   "an.step.5": "Synthesizing rebuild strategy",
   "an.verdict": "Verdict",
   "an.confidence": "confidence",
+  "an.recommendation": "Recommendation",
   "an.copy": "Copy insight",
   "an.copied": "Copied to clipboard",
   "an.copyFail": "Copy failed",
@@ -115,7 +116,7 @@ const en: Dict = {
   "an.rb.pricing": "Pricing strategy",
   "an.rb.gtm": "Go-to-market",
   "an.rb.mvp": "MVP roadmap",
-  "an.disclaimer": "FailWise insights are AI-generated. Use as a sharpening tool, not gospel.",
+  "an.disclaimer": "Proceed with caution. FailWise insights are AI-generated and do not constitute financial, legal, or business advice. Final decisions are your responsibility — FailWise assumes no liability.",
   "an.fail": "Analysis failed. Try again.",
 
   // Dimension labels (analyzer)
@@ -301,6 +302,7 @@ const tr: Dict = {
   "an.step.5": "Yeniden kurma stratejisi sentezleniyor",
   "an.verdict": "Karar",
   "an.confidence": "güven",
+  "an.recommendation": "Tavsiye",
   "an.copy": "İçgörüyü kopyala",
   "an.copied": "Panoya kopyalandı",
   "an.copyFail": "Kopyalanamadı",
@@ -319,7 +321,7 @@ const tr: Dict = {
   "an.rb.pricing": "Fiyatlandırma stratejisi",
   "an.rb.gtm": "Pazara giriş",
   "an.rb.mvp": "MVP yol haritası",
-  "an.disclaimer": "FailWise içgörüleri yapay zekâ tarafından üretilir. Kesin gerçek olarak değil, keskinleştirme aracı olarak kullan.",
+  "an.disclaimer": "Lütfen dikkatli olun. FailWise içgörüleri yapay zekâ tarafından üretilir; finansal, hukuki veya ticari tavsiye niteliği taşımaz. Nihai kararlar sizin sorumluluğunuzdadır — FailWise sonuçlardan sorumlu tutulamaz.",
   "an.fail": "Analiz başarısız oldu. Tekrar dene.",
 
   // Dimension labels (analyzer)
