@@ -60,18 +60,20 @@ export function RiskCard({ idea, score, reason }: { idea: string; score: number;
             {t("risk.scoreLabel")}
           </div>
 
-          <h3 className="max-w-md text-balance text-[23px] font-semibold leading-[1.22] tracking-[-0.022em]">
+          <h3 className="max-w-md text-balance text-[23px] font-semibold leading-[1.22] tracking-[-0.022em] text-foreground">
             {idea}
           </h3>
 
-          <div className="max-w-md rounded-lg border border-border/70 bg-background/40 p-4">
-            <div className="mb-1.5 flex items-center gap-2">
-              <span className="h-3 w-[2px] rounded-full bg-primary" />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+          <div className="max-w-md rounded-lg border border-border/70 bg-background/50 p-4 backdrop-blur-sm">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="h-3.5 w-[2px] rounded-full bg-primary" />
+              <span className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-primary">
                 {t("risk.topRisk")}
               </span>
             </div>
-            <p className="text-[13px] leading-relaxed text-muted-foreground">{reason}</p>
+            <p className="text-[14px] font-normal leading-[1.65] tracking-[0.001em] text-foreground/85 antialiased">
+              {reason}
+            </p>
           </div>
         </div>
 
@@ -139,12 +141,12 @@ export function RiskCard({ idea, score, reason }: { idea: string; score: number;
           <div className="absolute inset-0 grid place-items-center">
             <div className="text-center">
               <div
-                className="font-mono text-[38px] font-semibold leading-none tabular-nums text-primary"
-                style={{ textShadow: "0 0 24px color-mix(in oklab, var(--primary) 45%, transparent)" }}
+                className="font-mono text-[40px] font-semibold leading-none tabular-nums text-primary"
+                style={{ textShadow: "0 0 14px color-mix(in oklab, var(--primary) 30%, transparent)" }}
               >
                 {clamped}
               </div>
-              <div className="mt-2 text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              <div className="mt-2 text-[9.5px] font-semibold uppercase tracking-[0.2em] text-foreground/60">
                 {tier}
               </div>
             </div>

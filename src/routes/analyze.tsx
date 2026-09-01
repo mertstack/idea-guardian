@@ -335,28 +335,28 @@ FailWise — ${t("risk.platform")}`;
               </span>
             </div>
 
-            <h2 className="mt-5 text-[22px] font-semibold leading-[1.4] tracking-tight text-balance">
+            <h2 className="mt-5 text-balance text-[22px] font-semibold leading-[1.45] tracking-[-0.01em] text-foreground antialiased">
               <span className="mr-1 select-none font-mono text-primary">“</span>
               {analysis.verdict}
               <span className="ml-1 select-none font-mono text-primary">”</span>
             </h2>
 
-            <div className="mt-5 rounded-lg border border-border/70 bg-background/40 p-4">
-              <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[.14em] text-muted-foreground/80">
+            <div className="mt-5 rounded-lg border border-border/70 bg-background/50 p-4">
+              <div className="mb-2 font-mono text-[10.5px] font-medium uppercase tracking-[.16em] text-foreground/55">
                 {t("an.ideaSummary")}
               </div>
-              <p className="text-[13.5px] leading-relaxed text-muted-foreground">
+              <p className="text-[14px] leading-[1.7] tracking-[0.001em] text-foreground/85 antialiased">
                 {analysis.ideaSummary}
               </p>
             </div>
 
             {analysis.recommendation && (
               <div className="mt-4 rounded-lg border border-primary/25 bg-primary/[.06] p-4">
-                <div className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.14em] text-primary">
+                <div className="mb-2 flex items-center gap-1.5 font-mono text-[10.5px] font-medium uppercase tracking-[.16em] text-primary">
                   <Sparkles className="h-3 w-3" />
                   {t("an.recommendation")}
                 </div>
-                <p className="text-[13.5px] leading-relaxed text-foreground/90">
+                <p className="text-[14px] leading-[1.7] tracking-[0.001em] text-foreground/90 antialiased">
                   {analysis.recommendation}
                 </p>
               </div>
