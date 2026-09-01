@@ -91,12 +91,14 @@ export function SiteHeader() {
             <>
               <Link
                 to="/auth"
+                search={{ next: undefined }}
                 className="hidden h-8 items-center rounded-md px-3 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
               >
                 {t("nav.signIn")}
               </Link>
               <Link
                 to="/auth"
+                search={{ next: undefined }}
                 className="inline-flex h-8 items-center rounded-md bg-primary px-3.5 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 {t("nav.signUp")}

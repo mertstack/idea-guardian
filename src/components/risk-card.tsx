@@ -77,13 +77,26 @@ export function RiskCard({ idea, score, reason }: { idea: string; score: number;
 
         <div className="relative grid h-36 w-36 shrink-0 place-items-center">
           <svg viewBox="0 0 140 140" className="h-36 w-36">
+            <defs>
+              <linearGradient id="riskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="var(--primary)" />
+                <stop offset="100%" stopColor="color-mix(in oklab, var(--primary) 55%, white)" />
+              </linearGradient>
+              <filter id="riskGlow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
             {/* tick ring */}
-            <g opacity="0.5">
+            <g opacity="0.55">
               {Array.from({ length: TICKS }).map((_, i) => {
                 const a = (i / TICKS) * Math.PI * 2 - Math.PI / 2;
                 const on = i / TICKS <= clamped / 100;
                 const r1 = 66;
-                const r2 = on ? 61 : 63;
+                const r2 = on ? 60.5 : 63;
                 return (
                   <line
                     key={i}
@@ -93,7 +106,7 @@ export function RiskCard({ idea, score, reason }: { idea: string; score: number;
                     y2={70 + Math.sin(a) * r2}
                     stroke={on ? "var(--primary)" : "currentColor"}
                     className={on ? "" : "text-border"}
-                    strokeWidth="1.5"
+                    strokeWidth={on ? 2 : 1.5}
                     strokeLinecap="round"
                   />
                 );
@@ -107,27 +120,31 @@ export function RiskCard({ idea, score, reason }: { idea: string; score: number;
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="7"
-                className="text-border"
+                className="text-border/60"
               />
               <circle
                 cx="70"
                 cy="70"
                 r={R}
                 fill="none"
-                stroke="var(--primary)"
+                stroke="url(#riskGrad)"
                 strokeWidth="7"
                 strokeLinecap="round"
                 strokeDasharray={`${dash} ${C}`}
+                filter="url(#riskGlow)"
                 style={{ transition: "stroke-dasharray 900ms cubic-bezier(0.16,1,0.3,1)" }}
               />
             </g>
           </svg>
           <div className="absolute inset-0 grid place-items-center">
             <div className="text-center">
-              <div className="font-mono text-[36px] font-semibold leading-none tabular-nums text-primary">
+              <div
+                className="font-mono text-[38px] font-semibold leading-none tabular-nums text-primary"
+                style={{ textShadow: "0 0 24px color-mix(in oklab, var(--primary) 45%, transparent)" }}
+              >
                 {clamped}
               </div>
-              <div className="mt-2 text-[9px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              <div className="mt-2 text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
                 {tier}
               </div>
             </div>
