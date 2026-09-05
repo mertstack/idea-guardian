@@ -4,6 +4,33 @@ import { z } from "zod";
 
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
 
+// The model sometimes returns numbers/objects where we expect strings.
+// Coerce them instead of failing the whole analysis.
+const TextField = z.preprocess(
+  (v) => (typeof v === "string" ? v : v == null ? "" : typeof v === "object" ? JSON.stringify(v) : String(v)),
+  z.string(),
+);
+const ScoreField = z.preprocess(
+  (v) => {
+    if (typeof v === "number") return v;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 50;
+  },
+  z.number().min(0).max(100),
+);
+const SignalField = z.preprocess((v) => {
+  const s = String(v ?? "").toLowerCase();
+  return ["strong", "neutral", "weak", "critical"].includes(s) ? s : "neutral";
+}, z.enum(["strong", "neutral", "weak", "critical"]));
+const SeverityField = z.preprocess((v) => {
+  const s = String(v ?? "").toLowerCase();
+  return ["low", "medium", "high", "critical"].includes(s) ? s : "medium";
+}, z.enum(["low", "medium", "high", "critical"]));
+const ConfidenceField = z.preprocess((v) => {
+  const s = String(v ?? "").toLowerCase();
+  return ["low", "medium", "high"].includes(s) ? s : "medium";
+}, z.enum(["low", "medium", "high"]));
+
 const DimensionSchema = z.object({
   score: z.number().min(0).max(100),
   signal: z.enum(["strong", "neutral", "weak", "critical"]),
