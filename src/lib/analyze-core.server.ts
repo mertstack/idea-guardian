@@ -4,20 +4,47 @@ import { z } from "zod";
 
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
 
+// The model sometimes returns numbers/objects where we expect strings.
+// Coerce them instead of failing the whole analysis.
+const TextField = z.preprocess(
+  (v) => (typeof v === "string" ? v : v == null ? "" : typeof v === "object" ? JSON.stringify(v) : String(v)),
+  z.string(),
+);
+const ScoreField = z.preprocess(
+  (v) => {
+    if (typeof v === "number") return v;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 50;
+  },
+  z.number().min(0).max(100),
+);
+const SignalField = z.preprocess((v) => {
+  const s = String(v ?? "").toLowerCase();
+  return ["strong", "neutral", "weak", "critical"].includes(s) ? s : "neutral";
+}, z.enum(["strong", "neutral", "weak", "critical"]));
+const SeverityField = z.preprocess((v) => {
+  const s = String(v ?? "").toLowerCase();
+  return ["low", "medium", "high", "critical"].includes(s) ? s : "medium";
+}, z.enum(["low", "medium", "high", "critical"]));
+const ConfidenceField = z.preprocess((v) => {
+  const s = String(v ?? "").toLowerCase();
+  return ["low", "medium", "high"].includes(s) ? s : "medium";
+}, z.enum(["low", "medium", "high"]));
+
 const DimensionSchema = z.object({
-  score: z.number().min(0).max(100),
-  signal: z.enum(["strong", "neutral", "weak", "critical"]),
-  insight: z.string(),
-  detail: z.string(),
+  score: ScoreField,
+  signal: SignalField,
+  insight: TextField,
+  detail: TextField,
 });
 
 export const AnalysisSchema = z.object({
-  ideaSummary: z.string(),
-  riskScore: z.number().min(0).max(100),
-  confidence: z.enum(["low", "medium", "high"]),
-  verdict: z.string(),
-  recommendation: z.string(),
-  topFailureReason: z.string(),
+  ideaSummary: TextField,
+  riskScore: ScoreField,
+  confidence: ConfidenceField,
+  verdict: TextField,
+  recommendation: TextField,
+  topFailureReason: TextField,
   dimensions: z.object({
     marketDemand: DimensionSchema,
     competition: DimensionSchema,
@@ -27,25 +54,25 @@ export const AnalysisSchema = z.object({
   }),
   failureBreakdown: z.array(
     z.object({
-      category: z.string(),
-      severity: z.enum(["low", "medium", "high", "critical"]),
-      issue: z.string(),
-      detail: z.string(),
+      category: TextField,
+      severity: SeverityField,
+      issue: TextField,
+      detail: TextField,
     }),
   ),
   preMortem: z.array(
     z.object({
-      month: z.string(),
-      event: z.string(),
-      impact: z.string(),
+      month: TextField,
+      event: TextField,
+      impact: TextField,
     }),
   ),
   rebuild: z.object({
-    positioning: z.string(),
-    targetAudience: z.string(),
-    pricingStrategy: z.string(),
-    mvpRoadmap: z.array(z.string()),
-    gtmStrategy: z.string(),
+    positioning: TextField,
+    targetAudience: TextField,
+    pricingStrategy: TextField,
+    mvpRoadmap: z.array(TextField),
+    gtmStrategy: TextField,
   }),
 });
 
@@ -129,5 +156,9 @@ ${tail}`,
   } catch {
     throw new Error("Model returned malformed JSON. Try again.");
   }
-  return AnalysisSchema.parse(parsed);
+  const result = AnalysisSchema.safeParse(parsed);
+  if (!result.success) {
+    throw new Error("Model returned an incomplete analysis. Please try again.");
+  }
+  return result.data;
 }
