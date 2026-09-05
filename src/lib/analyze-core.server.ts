@@ -54,25 +54,25 @@ export const AnalysisSchema = z.object({
   }),
   failureBreakdown: z.array(
     z.object({
-      category: z.string(),
-      severity: z.enum(["low", "medium", "high", "critical"]),
-      issue: z.string(),
-      detail: z.string(),
+      category: TextField,
+      severity: SeverityField,
+      issue: TextField,
+      detail: TextField,
     }),
   ),
   preMortem: z.array(
     z.object({
-      month: z.string(),
-      event: z.string(),
-      impact: z.string(),
+      month: TextField,
+      event: TextField,
+      impact: TextField,
     }),
   ),
   rebuild: z.object({
-    positioning: z.string(),
-    targetAudience: z.string(),
-    pricingStrategy: z.string(),
-    mvpRoadmap: z.array(z.string()),
-    gtmStrategy: z.string(),
+    positioning: TextField,
+    targetAudience: TextField,
+    pricingStrategy: TextField,
+    mvpRoadmap: z.array(TextField),
+    gtmStrategy: TextField,
   }),
 });
 
