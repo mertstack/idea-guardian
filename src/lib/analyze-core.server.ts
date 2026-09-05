@@ -32,19 +32,19 @@ const ConfidenceField = z.preprocess((v) => {
 }, z.enum(["low", "medium", "high"]));
 
 const DimensionSchema = z.object({
-  score: z.number().min(0).max(100),
-  signal: z.enum(["strong", "neutral", "weak", "critical"]),
-  insight: z.string(),
-  detail: z.string(),
+  score: ScoreField,
+  signal: SignalField,
+  insight: TextField,
+  detail: TextField,
 });
 
 export const AnalysisSchema = z.object({
-  ideaSummary: z.string(),
-  riskScore: z.number().min(0).max(100),
-  confidence: z.enum(["low", "medium", "high"]),
-  verdict: z.string(),
-  recommendation: z.string(),
-  topFailureReason: z.string(),
+  ideaSummary: TextField,
+  riskScore: ScoreField,
+  confidence: ConfidenceField,
+  verdict: TextField,
+  recommendation: TextField,
+  topFailureReason: TextField,
   dimensions: z.object({
     marketDemand: DimensionSchema,
     competition: DimensionSchema,
