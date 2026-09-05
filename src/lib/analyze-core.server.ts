@@ -156,5 +156,9 @@ ${tail}`,
   } catch {
     throw new Error("Model returned malformed JSON. Try again.");
   }
-  return AnalysisSchema.parse(parsed);
+  const result = AnalysisSchema.safeParse(parsed);
+  if (!result.success) {
+    throw new Error("Model returned an incomplete analysis. Please try again.");
+  }
+  return result.data;
 }
