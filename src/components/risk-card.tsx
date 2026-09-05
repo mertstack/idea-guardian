@@ -82,7 +82,7 @@ export function RiskCard({ idea, score, reason }: { idea: string; score: number;
           {/* inner disc */}
           <div
             aria-hidden
-            className="absolute inset-[13px] rounded-full border border-border/50 bg-background/50"
+            className="absolute inset-[13px] rounded-full border border-primary/25 bg-primary/[0.09] shadow-[inset_0_0_24px_color-mix(in_oklab,var(--primary)_12%,transparent)]"
           />
           <svg viewBox="0 0 280 280" className="h-36 w-36">
             <defs>
