@@ -224,24 +224,77 @@ function AnalyzingState() {
     t("an.step.4"),
     t("an.step.5"),
   ];
+
+  // Cycle through the steps so the wait feels alive and predictable.
+  const [activeStep, setActiveStep] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActiveStep((s) => (s + 1 < steps.length ? s + 1 : s));
+    }, 4500);
+    return () => clearInterval(id);
+  }, [steps.length]);
+
   return (
-    <div className="rounded-xl border border-border bg-surface p-7">
-      <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
-        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" /> {t("an.steps.title")}
+    <div className="relative overflow-hidden rounded-xl border border-border bg-surface p-7">
+      {/* subtle progress bar */}
+      <div className="absolute inset-x-0 top-0 h-0.5 bg-border/60">
+        <div
+          className="h-full bg-primary transition-[width] duration-[4500ms] ease-linear"
+          style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
+        />
       </div>
+
+      <div className="flex items-center gap-2.5 text-[13px] text-foreground">
+        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+        <span>{t("an.thinking")}</span>
+        <span className="inline-flex w-4 justify-start">
+          <span className="animate-pulse">…</span>
+        </span>
+      </div>
+
       <ul className="mt-6 space-y-3">
-        {steps.map((s, i) => (
-          <li
-            key={s}
-            className="flex items-center gap-3 text-[13px] text-foreground"
-            style={{ animation: `fade-in 400ms ease-out ${i * 220}ms both` }}
-          >
-            <span className="grid h-5 w-5 place-items-center rounded-full border border-border bg-background text-muted-foreground">
-              <Check className="h-3 w-3" />
-            </span>
-            {s}
-          </li>
-        ))}
+        {steps.map((s, i) => {
+          const done = i < activeStep;
+          const current = i === activeStep;
+          return (
+            <li
+              key={s}
+              className={`flex items-center gap-3 text-[13px] transition-opacity duration-500 ${
+                done ? "text-muted-foreground" : current ? "text-foreground" : "opacity-35"
+              }`}
+            >
+              <span
+                className={`grid h-5 w-5 place-items-center rounded-full border ${
+                  done
+                    ? "border-primary/40 bg-primary/10 text-primary"
+                    : current
+                      ? "border-border-strong bg-background"
+                      : "border-border bg-background text-muted-foreground"
+                }`}
+              >
+                {done ? (
+                  <Check className="h-3 w-3" />
+                ) : current ? (
+                  <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                ) : (
+                  <span className="font-mono text-[9px] tabular-nums">{i + 1}</span>
+                )}
+              </span>
+              {s}
+              {current && (
+                <span className="ml-1 inline-flex gap-0.5">
+                  {[0, 1, 2].map((d) => (
+                    <span
+                      key={d}
+                      className="h-1 w-1 animate-bounce rounded-full bg-primary"
+                      style={{ animationDelay: `${d * 150}ms` }}
+                    />
+                  ))}
+                </span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
