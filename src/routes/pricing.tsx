@@ -11,8 +11,12 @@ export const Route = createFileRoute("/pricing")({
       {
         name: "description",
         content:
-          "Free, Pro, and Expert plans for startup founders who want to avoid building failed products.",
+          "Free, Pro, Expert and Intelligence plans for founders who want evidence before they build.",
       },
+      { property: "og:title", content: "Pricing — FailWise" },
+      { property: "og:description", content: "Free, Pro, Expert and Intelligence plans for founders." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Pricing,
@@ -65,7 +69,24 @@ function Pricing() {
       ],
       cta: t("pricing.expert.cta"),
     },
-  ];
+    {
+      name: t("pricing.intel.name"),
+      price: "$59",
+      cadence: t("pricing.cadence.month"),
+      accent: "border-primary/50 bg-gradient-to-b from-primary/[0.07] to-card",
+      premium: true,
+      tagline: t("pricing.intel.tag"),
+      features: [
+        t("pricing.intel.f1"),
+        t("pricing.intel.f2"),
+        t("pricing.intel.f3"),
+        t("pricing.intel.f4"),
+        t("pricing.intel.f5"),
+        t("pricing.intel.f6"),
+      ],
+      cta: t("pricing.intel.cta"),
+    },
+  ] as Array<{ name: string; price: string; cadence: string; accent: string; highlight?: boolean; premium?: boolean; tagline?: string; features: string[]; cta: string }>;
 
   return (
     <div className="relative min-h-screen">
@@ -81,7 +102,7 @@ function Pricing() {
           <p className="mt-4 text-muted-foreground">{t("pricing.sub")}</p>
         </div>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-3">
+        <div className="mt-16 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {tiers.map((tier) => (
             <div
               key={tier.name}
@@ -92,7 +113,13 @@ function Pricing() {
                   {t("pricing.mostPopular")}
                 </div>
               )}
+              {tier.premium && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-primary/40 bg-background px-3 py-1 text-xs font-medium text-primary">
+                  {t("pricing.premium")}
+                </div>
+              )}
               <div className="font-display text-lg font-semibold">{tier.name}</div>
+              {tier.tagline && <p className="mt-1 text-xs text-muted-foreground">{tier.tagline}</p>}
               <div className="mt-4 flex items-baseline gap-1">
                 <span className="font-display text-5xl font-bold">{tier.price}</span>
                 <span className="text-sm text-muted-foreground">{tier.cadence}</span>
@@ -106,9 +133,9 @@ function Pricing() {
                 ))}
               </ul>
               <Link
-                to="/analyze"
+                to={tier.premium ? "/intelligence" : "/analyze"}
                 className={`mt-8 inline-flex h-11 items-center justify-center rounded-md px-4 text-sm font-medium transition-transform hover:scale-[1.02] ${
-                  tier.highlight
+                  tier.highlight || tier.premium
                     ? "bg-primary text-primary-foreground"
                     : "border border-border bg-background/60 text-foreground"
                 }`}
