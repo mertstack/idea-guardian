@@ -31,6 +31,10 @@ export const Route = createFileRoute("/analyze")({
   head: () => ({
     meta: [
       { title: "Analyzer — FailWise" },
+      { property: "og:title", content: "Analyzer — FailWise" },
+      { property: "og:description", content: "Score your startup across market demand, competition, pricing, distribution, and founder advantage." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         name: "description",
         content:

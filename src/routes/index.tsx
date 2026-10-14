@@ -26,6 +26,8 @@ export const Route = createFileRoute("/")({
           "FailWise is the founder intelligence platform. Score your idea on market demand, competition, pricing, distribution, and founder advantage before you build.",
       },
       { property: "og:title", content: "FailWise — Founder intelligence platform" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content: "FailWise is the founder intelligence platform. Score your idea on market demand, competition, pricing, distribution, and founder advantage before you build.",

@@ -1,4 +1,4 @@
-- [ ] Şirketlere özel B2B / white-label sayfasını ve panel önizlemesini ekle.
-- [ ] Son isteğe göre isim, logo ve panel etiketlerini FailWise olarak sabit tut; marka değişimi yerine sektör seçimi sun.
-- [ ] Mevcut siyah–gri / mercan kırmızısı renklerini koru; Türkçe ve İngilizce metinleri tamamla.
-- [ ] Sayfayı ve sektör seçimini kontrol et, gerekli paket güncellemesini uygula.
+- [x] Şirketlere özel B2B / white-label sayfasını ve panel önizlemesini ekle.
+- [x] Son isteğe göre isim, logo ve panel etiketlerini FailWise olarak sabit tut; marka değişimi yerine sektör seçimi sun.
+- [x] Mevcut siyah–gri / mercan kırmızısı renklerini koru; Türkçe ve İngilizce metinleri tamamla.
+- [x] Sayfayı ve sektör seçimini kontrol et, gerekli paket güncellemesini uygula.
