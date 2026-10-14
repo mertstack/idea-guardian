@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Check, Sparkles } from "lucide-react";
+import { ArrowRight, Building2, Check, Sparkles } from "lucide-react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { useI18n } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/pricing")({
 });
 
 function Pricing() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const tiers = [
     {
@@ -144,6 +145,10 @@ function Pricing() {
               </Link>
             </div>
           ))}
+        </div>
+        <div className="mt-14 flex flex-col justify-between gap-6 border-y border-border py-8 sm:flex-row sm:items-center">
+          <div className="max-w-lg"><p className="mb-3 flex items-center gap-2 text-xs font-medium text-primary"><Building2 className="h-4 w-4" />FailWise B2B</p><h2 className="text-2xl font-semibold">{lang === "tr" ? "kendi markanla, kendi panelinle" : "your brand, your workspace"}</h2><p className="mt-3 text-sm leading-6 text-muted-foreground">{lang === "tr" ? "Danışmanlık, yatırım ve inovasyon ekipleri için şirketlere özel deneyimi keşfedin." : "Explore a company-specific experience for consulting, investment and innovation teams."}</p></div>
+          <Button asChild variant="outline"><Link to="/enterprise">{lang === "tr" ? "Kurumsal çözümleri keşfet" : "Explore enterprise solutions"}<ArrowRight /></Link></Button>
         </div>
       </section>
       <SiteFooter />

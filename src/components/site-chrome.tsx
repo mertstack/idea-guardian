@@ -44,7 +44,7 @@ function LangSwitch() {
 }
 
 export function SiteHeader() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { user, signOut } = useAuth();
 
   return (
@@ -68,6 +68,9 @@ export function SiteHeader() {
           </a>
           <Link to="/pricing" className="transition-colors hover:text-foreground">
             {t("nav.pricing")}
+          </Link>
+          <Link to="/enterprise" className="transition-colors hover:text-foreground">
+            {lang === "tr" ? "Şirketler için" : "For businesses"}
           </Link>
         </nav>
         <div className="flex items-center gap-2">

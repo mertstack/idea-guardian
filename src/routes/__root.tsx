@@ -95,8 +95,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "FailWise — Founder intelligence platform" },
       { name: "twitter:description", content: "FailWise is the founder intelligence platform. Score your idea on market demand, competition, pricing, distribution, and founder advantage before you build." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/415518cc-6c52-4bca-9246-4977aa98c705" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/415518cc-6c52-4bca-9246-4977aa98c705" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
