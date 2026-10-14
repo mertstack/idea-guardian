@@ -12,6 +12,10 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "FailWise — Sign in" },
+      { property: "og:title", content: "FailWise — Sign in" },
+      { property: "og:description", content: "Sign in or create your FailWise account." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "description", content: "Sign in or create your FailWise account." },
     ],
   }),
