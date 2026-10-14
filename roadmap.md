@@ -1,0 +1,3 @@
+- [ ] Şirketlere özel white-label sayfasını ve anında değişen marka önizlemesini ekle.
+- [ ] Mevcut siyah–gri / mercan kırmızısı renklerini koru; Türkçe ve İngilizce metinleri tamamla.
+- [ ] Sayfayı ve marka seçimini kontrol et, gerekli paket güncellemesini uygula.
