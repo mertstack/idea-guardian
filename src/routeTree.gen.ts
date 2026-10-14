@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as EnterpriseRouteImport } from './routes/enterprise'
 import { Route as IntelligenceRouteImport } from './routes/intelligence'
 import { Route as PricingRouteImport } from './routes/pricing'
 
@@ -30,6 +31,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnterpriseRoute = EnterpriseRouteImport.update({
+  id: '/enterprise',
+  path: '/enterprise',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IntelligenceRoute = IntelligenceRouteImport.update({
   id: '/intelligence',
   path: '/intelligence',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/auth': typeof AuthRoute
+  '/enterprise': typeof EnterpriseRoute
   '/intelligence': typeof IntelligenceRoute
   '/pricing': typeof PricingRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/auth': typeof AuthRoute
+  '/enterprise': typeof EnterpriseRoute
   '/intelligence': typeof IntelligenceRoute
   '/pricing': typeof PricingRoute
 }
@@ -60,21 +68,36 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/auth': typeof AuthRoute
+  '/enterprise': typeof EnterpriseRoute
   '/intelligence': typeof IntelligenceRoute
   '/pricing': typeof PricingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analyze' | '/auth' | '/intelligence' | '/pricing'
+  fullPaths:
+    | '/'
+    | '/analyze'
+    | '/auth'
+    | '/enterprise'
+    | '/intelligence'
+    | '/pricing'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analyze' | '/auth' | '/intelligence' | '/pricing'
-  id: '__root__' | '/' | '/analyze' | '/auth' | '/intelligence' | '/pricing'
+  to: '/' | '/analyze' | '/auth' | '/enterprise' | '/intelligence' | '/pricing'
+  id:
+    | '__root__'
+    | '/'
+    | '/analyze'
+    | '/auth'
+    | '/enterprise'
+    | '/intelligence'
+    | '/pricing'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyzeRoute: typeof AnalyzeRoute
   AuthRoute: typeof AuthRoute
+  EnterpriseRoute: typeof EnterpriseRoute
   IntelligenceRoute: typeof IntelligenceRoute
   PricingRoute: typeof PricingRoute
 }
@@ -102,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/enterprise': {
+      id: '/enterprise'
+      path: '/enterprise'
+      fullPath: '/enterprise'
+      preLoaderRoute: typeof EnterpriseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/intelligence': {
       id: '/intelligence'
       path: '/intelligence'
@@ -123,6 +153,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyzeRoute: AnalyzeRoute,
   AuthRoute: AuthRoute,
+  EnterpriseRoute: EnterpriseRoute,
   IntelligenceRoute: IntelligenceRoute,
   PricingRoute: PricingRoute,
 }
