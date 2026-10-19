@@ -134,7 +134,8 @@ function Pricing() {
                 ))}
               </ul>
               <Link
-                to={tier.premium ? "/intelligence" : "/analyze"}
+                to={tier.premium || tier.price === "$39" ? "/intelligence" : "/analyze"}
+                search={{ tier: tier.premium ? "intelligence" : tier.price === "$39" ? "expert" : tier.price === "$19" ? "pro" : "free" }}
                 className={`mt-8 inline-flex h-11 items-center justify-center rounded-md px-4 text-sm font-medium transition-transform hover:scale-[1.02] ${
                   tier.highlight || tier.premium
                     ? "bg-primary text-primary-foreground"

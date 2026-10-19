@@ -550,6 +550,7 @@ FailWise — ${t("risk.platform")}`;
         </div>
       </Section>
 
+      <DecisionSupportSections items={analysis.decisionSupport} />
       <div className="mx-auto max-w-2xl rounded-xl border border-border/70 bg-surface/60 px-6 py-4 text-center">
         <div className="mb-1 flex items-center justify-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
           <AlertTriangle className="h-3 w-3 text-warning" />
