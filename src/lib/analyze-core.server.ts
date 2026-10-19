@@ -163,6 +163,7 @@ There is no live web evidence in this analysis. Never label findings as verified
   }
   const result = AnalysisSchema.safeParse(parsed);
   if (!result.success) {
+    console.error("Analysis validation issues", result.error.issues.map(issue => ({ path: issue.path, code: issue.code })));
     throw new Error("Model returned an incomplete analysis. Please try again.");
   }
   return { ...result.data, decisionSupport: filterDecisionSupport(result.data.decisionSupport, tier, new Set()) };

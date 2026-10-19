@@ -177,7 +177,10 @@ ${decisionSupportPrompt(tier)}`,
     throw new Error("The report could not be generated. Please try again.");
   }
   const r = IntelSchema.safeParse(parsed);
-  if (!r.success) throw new Error("The report came back incomplete. Please try again.");
+  if (!r.success) {
+    console.error("Intelligence validation issues", r.error.issues.map(issue => ({ path: issue.path, code: issue.code })));
+    throw new Error("The report came back incomplete. Please try again.");
+  }
   // Drop any URL the model cited that wasn't in the evidence.
   const ok = (u: string) => seen.has(u);
   const data = r.data;
