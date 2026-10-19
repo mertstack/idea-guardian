@@ -1,4 +1,4 @@
-import { Suspense, useRef } from "react";
+import { Component, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial, Environment } from "@react-three/drei";
 import type { Mesh } from "three";
@@ -28,7 +28,20 @@ function Orb() {
 }
 
 export function Hero3D() {
+  const [supported, setSupported] = useState(false);
+  useEffect(() => {
+    try {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+      if (!gl) return;
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      setSupported(true);
+    } catch { /* The core site must work without WebGL. */ }
+  }, []);
+  if (!supported) return null;
   return (
+    <SceneBoundary>
     <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
       <Canvas
         dpr={[1, 1.6]}
@@ -44,5 +57,12 @@ export function Hero3D() {
         </Suspense>
       </Canvas>
     </div>
+    </SceneBoundary>
   );
+}
+
+class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() { return this.state.failed ? null : this.props.children; }
 }

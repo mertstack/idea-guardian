@@ -3,6 +3,8 @@ import process from "node:process";
 import { z } from "zod";
 
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
+import { decisionSupportPrompt } from "./decision-support-prompt.server";
+import { DecisionSupportSchema, filterDecisionSupport } from "./report-depth";
 
 // The model sometimes returns numbers/objects where we expect strings.
 // Coerce them instead of failing the whole analysis.
@@ -39,6 +41,7 @@ const DimensionSchema = z.object({
 });
 
 export const AnalysisSchema = z.object({
+  decisionSupport: DecisionSupportSchema,
   ideaSummary: TextField,
   riskScore: ScoreField,
   confidence: ConfidenceField,
@@ -103,7 +106,7 @@ function extractJson(text: string): string {
   return candidate.slice(start, end + 1);
 }
 
-export async function runAnalysis(idea: string, lang: "en" | "tr" = "en"): Promise<StartupAnalysis> {
+export async function runAnalysis(idea: string, lang: "en" | "tr" = "en", tier: "free" | "pro" = "free"): Promise<StartupAnalysis> {
   const key = process.env.LOVABLE_API_KEY;
   if (!key) throw new Error("Missing LOVABLE_API_KEY");
 
@@ -147,7 +150,9 @@ export async function runAnalysis(idea: string, lang: "en" | "tr" = "en"): Promi
   }
 }
 
-${tail}`,
+${tail}
+${decisionSupportPrompt(tier)}
+There is no live web evidence in this analysis. Never label findings as verified; do not invent sources.`,
   });
 
   let parsed: unknown;
@@ -158,7 +163,8 @@ ${tail}`,
   }
   const result = AnalysisSchema.safeParse(parsed);
   if (!result.success) {
+    console.error("Analysis validation issues", result.error.issues.map(issue => ({ path: issue.path, code: issue.code })));
     throw new Error("Model returned an incomplete analysis. Please try again.");
   }
-  return result.data;
+  return { ...result.data, decisionSupport: filterDecisionSupport(result.data.decisionSupport, tier, new Set()) };
 }

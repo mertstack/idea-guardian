@@ -7,6 +7,9 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
 import { runIntelligenceReport, type IntelReport } from "@/lib/intelligence.functions";
+import { DecisionSupportSections } from "@/components/decision-support";
+import { Button } from "@/components/ui/button";
+import { z } from "zod";
 
 export const Route = createFileRoute("/intelligence")({
   head: () => ({
@@ -20,12 +23,15 @@ export const Route = createFileRoute("/intelligence")({
     ],
   }),
   component: IntelligencePage,
+  validateSearch: z.object({ tier: z.enum(["expert", "intelligence"]).optional() }),
 });
 
 type Saved = { id: string; idea: string; at: number; report: IntelReport };
 const KEY = "failwise.intel.reports";
 
 function IntelligencePage() {
+  const { tier = "intelligence" } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const { lang } = useI18n();
   const tr = lang === "tr";
   const L = (en: string, t: string) => (tr ? t : en);
@@ -50,12 +56,12 @@ function IntelligencePage() {
     setBusy(true);
     setError(null);
     try {
-      const report = await run({ data: { idea: idea.trim(), lang } });
+      const report = await run({ data: { idea: idea.trim(), lang, tier } });
       const item: Saved = { id: crypto.randomUUID(), idea: idea.trim(), at: Date.now(), report };
       const next = [item, ...saved].slice(0, 20);
       setSaved(next);
-      localStorage.setItem(KEY, JSON.stringify(next));
       setCurrent(item);
+      try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* Display the report even if storage is unavailable. */ }
     } catch (e) {
       setError((e as Error).message || L("Something went wrong.", "Bir şeyler ters gitti."));
     } finally {
@@ -68,7 +74,7 @@ function IntelligencePage() {
       <SiteHeader />
       <main className="mx-auto max-w-5xl px-6 py-14">
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-3 py-1 text-xs text-primary">
-          Intelligence · $59/{L("mo", "ay")}
+          {tier === "expert" ? "Expert · $39" : "Intelligence · $59"}/{L("mo", "ay")}
         </div>
         <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight">
           {L("Don't just evaluate your idea. Know what to do next.", "Sadece fikrini değerlendirme. Sırada ne yapacağını bil.")}
@@ -79,6 +85,10 @@ function IntelligencePage() {
             "Rakipler ve talep için canlı web araştırması, açıklanabilir risk skoru, ilk müşteri planı ve net bir BUILD / PIVOT / TEST / STOP kararı.",
           )}
         </p>
+
+        <div className="mt-5 flex gap-2" role="group" aria-label={L("Analysis depth", "Analiz derinliği")}>
+          {(["expert", "intelligence"] as const).map(level => <Button key={level} variant={tier === level ? "default" : "outline"} aria-pressed={tier === level} onClick={() => navigate({ search: { tier: level } })}>{level === "expert" ? "Expert" : "Intelligence"}</Button>)}
+        </div>
 
         {!authLoading && !user ? (
           <div className="mt-8 rounded-xl border border-border bg-card p-6">
@@ -161,14 +171,14 @@ function Section({ n, title, icon, children }: { n: number; title: string; icon?
 }
 
 const A = ({ url }: { url: string }) =>
-  url ? (
+  /^https?:\/\//i.test(url) ? (
     <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
-      {new URL(url).hostname.replace("www.", "")} <ExternalLink className="h-3 w-3" />
+      {url.replace(/^https?:\/\/(www\.)?/i, "").split("/")[0]} <ExternalLink className="h-3 w-3" />
     </a>
   ) : null;
 
 function Report({ r, L }: { r: IntelReport; L: (a: string, b: string) => string }) {
-  const verdictLabel = r.decision.verdict.toUpperCase();
+  const verdictLabel = { build: L("BUILD", "DEVAM ET"), pivot: L("PIVOT", "YÖN DEĞİŞTİR"), test: L("TEST", "TEST ET"), stop: L("STOP", "DUR") }[r.decision.verdict];
   return (
     <div className="mt-10 space-y-5">
       <Section n={1} title={L("Executive summary", "Yönetici özeti")}>
@@ -308,6 +318,8 @@ function Report({ r, L }: { r: IntelReport; L: (a: string, b: string) => string 
         ))}
       </Section>
 
+      <DecisionSupportSections items={r.decisionSupport} />
+      <p className="border-t border-border pt-5 text-xs leading-6 text-muted-foreground">{L("AI-generated research and illustrative projections are not financial, legal or investment advice. Verify sources independently; decisions remain your responsibility. FailWise does not guarantee outcomes.", "Yapay zekâ araştırması ve örnek projeksiyonlar finansal, hukuki veya yatırım tavsiyesi değildir. Kaynakları bağımsız doğrulayın; kararlar sizin sorumluluğunuzdadır. FailWise sonuçları garanti etmez.")}</p>
       {r.sources.length > 0 && (
         <Section n={11} title={L("Sources", "Kaynaklar")}>
           <ul className="space-y-1 text-xs">
