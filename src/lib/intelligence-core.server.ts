@@ -3,6 +3,7 @@ import process from "node:process";
 import { z } from "zod";
 
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
+import { DecisionSupportSchema, decisionSupportPrompt, filterDecisionSupport } from "./report-depth";
 
 const T = z.preprocess(
   (v) => (typeof v === "string" ? v : v == null ? "" : typeof v === "object" ? JSON.stringify(v) : String(v)),
@@ -21,6 +22,7 @@ const Conf = enumOf(["low", "medium", "high"] as const, "low");
 const Arr = <S extends z.ZodTypeAny>(s: S) => z.preprocess((v) => (Array.isArray(v) ? v : []), z.array(s));
 
 export const IntelSchema = z.object({
+  decisionSupport: DecisionSupportSchema,
   executiveSummary: T,
   risk: z.object({
     overall: N,
@@ -107,7 +109,7 @@ function extractJson(text: string) {
   return c.slice(c.indexOf("{"), c.lastIndexOf("}") + 1);
 }
 
-export async function runIntelligence(idea: string, lang: "en" | "tr"): Promise<IntelReport> {
+export async function runIntelligence(idea: string, lang: "en" | "tr", tier: "expert" | "intelligence" = "intelligence"): Promise<IntelReport> {
   const key = process.env.LOVABLE_API_KEY;
   if (!key) throw new Error("Missing LOVABLE_API_KEY");
   const short = idea.slice(0, 160);
@@ -116,6 +118,7 @@ export async function runIntelligence(idea: string, lang: "en" | "tr"): Promise<
     ["competitors", `${short} competitors alternatives pricing`],
     ["reddit", `site:reddit.com ${short} problem`],
     ["reviews", `${short} reviews complaints`],
+    ...(tier === "intelligence" ? [["failures", `${short} failed startups shutdown lessons`] as [string, string]] : []),
   ];
   const results = await Promise.all(
     queries.map(async ([label, q]) => {
@@ -162,7 +165,8 @@ RULES: Only cite URLs that appear in the EVIDENCE block. Never invent competitor
 "pricing":{"summary":string,"recommendation":string},
 "distribution":{"channels":[{"channel":string,"why":string,"audience":string,"experiment":string,"estCost":string,"metrics":string,"risks":string}],"first10":[strings]},
 "decision":{"verdict":"build|pivot|test|stop","reasons":[strings],"priorities":[3 strings],"week":[{"day":"Day 1","task":string,"success":string}],"month":[{"week":"Week 1","focus":string}],"budget":string,"continueIf":string,"pivotIf":string,"stopIf":string}}
-Use exactly 5 risk dimensions, 3-6 competitors, 2-4 distribution channels (only ones that fit), 7 days, 4 weeks.`,
+Use exactly 5 risk dimensions, up to 6 competitors (fewer or none when evidence is insufficient), 2-4 distribution channels (only ones that fit), 7 days, 4 weeks.
+${decisionSupportPrompt(tier)}`,
   });
 
   let parsed: unknown;
@@ -184,5 +188,5 @@ Use exactly 5 risk dimensions, 3-6 competitors, 2-4 distribution channels (only 
   });
   data.demand.signals = data.demand.signals.filter((s) => ok(s.url));
   data.risk.dimensions.forEach((d) => (d.sources = d.sources.filter(ok)));
-  return { ...data, sources, limitations };
+  return { ...data, decisionSupport: filterDecisionSupport(data.decisionSupport, tier, seen), sources, limitations };
 }

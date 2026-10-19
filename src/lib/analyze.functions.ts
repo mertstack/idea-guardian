@@ -8,8 +8,9 @@ export type { StartupAnalysis } from "./analyze-core.server";
 const InputSchema = z.object({
   idea: z.string().min(1).max(4000),
   lang: z.enum(["en", "tr"]).optional().default("en"),
+  tier: z.enum(["free", "pro"]).default("free"),
 });
 
 export const analyzeStartup = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => InputSchema.parse(d))
-  .handler(async ({ data }) => runAnalysis(data.idea, data.lang));
+  .handler(async ({ data }) => runAnalysis(data.idea, data.lang, data.tier));
