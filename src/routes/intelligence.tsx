@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n";
 import { runIntelligenceReport, type IntelReport } from "@/lib/intelligence.functions";
 import { DecisionSupportSections } from "@/components/decision-support";
 import { Button } from "@/components/ui/button";
+import { z } from "zod";
 
 export const Route = createFileRoute("/intelligence")({
   head: () => ({
@@ -22,14 +23,14 @@ export const Route = createFileRoute("/intelligence")({
     ],
   }),
   component: IntelligencePage,
-  validateSearch: (s: Record<string, unknown>) => ({ tier: s.tier === "expert" ? "expert" as const : "intelligence" as const }),
+  validateSearch: z.object({ tier: z.enum(["expert", "intelligence"]).optional() }),
 });
 
 type Saved = { id: string; idea: string; at: number; report: IntelReport };
 const KEY = "failwise.intel.reports";
 
 function IntelligencePage() {
-  const { tier } = Route.useSearch();
+  const { tier = "intelligence" } = Route.useSearch();
   const navigate = Route.useNavigate();
   const { lang } = useI18n();
   const tr = lang === "tr";

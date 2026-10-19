@@ -45,7 +45,7 @@ export const Route = createFileRoute("/analyze")({
     ],
   }),
   component: AnalyzePage,
-  validateSearch: (s: Record<string, unknown>) => ({ tier: s.tier === "pro" ? "pro" as const : "free" as const }),
+  validateSearch: z.object({ tier: z.enum(["free", "pro"]).optional() }),
 });
 
 type HistoryItem = {
@@ -74,7 +74,7 @@ const SAMPLES_BY_LANG: Record<"en" | "tr", string[]> = {
 };
 
 function AnalyzePage() {
-  const { tier } = Route.useSearch();
+  const { tier = "free" } = Route.useSearch();
   const navigate = Route.useNavigate();
   const analyze = useServerFn(analyzeStartup);
   const { lang, t } = useI18n();
