@@ -26,6 +26,8 @@ import { SiteHeader } from "@/components/site-chrome";
 import { Tilt3D } from "@/components/tilt-3d";
 import { useI18n } from "@/lib/i18n";
 import { analyzeStartup, type StartupAnalysis } from "@/lib/analyze.functions";
+import { Button } from "@/components/ui/button";
+import { DecisionSupportSections } from "@/components/decision-support";
 
 export const Route = createFileRoute("/analyze")({
   head: () => ({
@@ -43,6 +45,7 @@ export const Route = createFileRoute("/analyze")({
     ],
   }),
   component: AnalyzePage,
+  validateSearch: (s: Record<string, unknown>) => ({ tier: s.tier === "pro" ? "pro" as const : "free" as const }),
 });
 
 type HistoryItem = {
@@ -71,6 +74,8 @@ const SAMPLES_BY_LANG: Record<"en" | "tr", string[]> = {
 };
 
 function AnalyzePage() {
+  const { tier } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const analyze = useServerFn(analyzeStartup);
   const { lang, t } = useI18n();
   const [idea, setIdea] = useState("");
@@ -90,7 +95,7 @@ function AnalyzePage() {
 
   const failMsg = t("an.fail");
   const mutation = useMutation({
-    mutationFn: async (input: string) => analyze({ data: { idea: input, lang } }),
+    mutationFn: async (input: string) => analyze({ data: { idea: input, lang, tier } }),
     onSuccess: (analysis, input) => {
       const item: HistoryItem = {
         id: crypto.randomUUID(),
@@ -167,6 +172,9 @@ function AnalyzePage() {
               {t("an.title")}
             </h1>
             <p className="mt-2 max-w-2xl text-[15px] text-muted-foreground">{t("an.sub")}</p>
+            <div className="mt-5 flex gap-2" role="group" aria-label={lang === "tr" ? "Analiz derinliği" : "Analysis depth"}>
+              {(["free", "pro"] as const).map(level => <Button key={level} variant={tier === level ? "default" : "outline"} aria-pressed={tier === level} onClick={() => navigate({ search: { tier: level } })}>{level === "pro" ? "Pro" : lang === "tr" ? "Temel" : "Basic"}</Button>)}
+            </div>
 
             <form onSubmit={onSubmit} className="mt-6">
               <div className="rounded-xl border border-border bg-surface focus-within:border-border-strong">
