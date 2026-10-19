@@ -3,7 +3,8 @@ import process from "node:process";
 import { z } from "zod";
 
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
-import { DecisionSupportSchema, decisionSupportPrompt, filterDecisionSupport } from "./report-depth";
+import { decisionSupportPrompt } from "./decision-support-prompt.server";
+import { DecisionSupportSchema, filterDecisionSupport } from "./report-depth";
 
 // The model sometimes returns numbers/objects where we expect strings.
 // Coerce them instead of failing the whole analysis.

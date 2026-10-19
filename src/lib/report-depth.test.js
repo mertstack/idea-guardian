@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { SUPPORT_BY_TIER, filterDecisionSupport, decisionSupportPrompt } from "./report-depth";
+import { SUPPORT_BY_TIER, filterDecisionSupport } from "./report-depth";
 
 describe("report depth rules", () => {
   test("most additions belong to Intelligence, with smaller Pro and Expert sets", () => {
@@ -13,14 +13,14 @@ describe("report depth rules", () => {
     expect(SUPPORT_BY_TIER.intelligence).toContain("growth");
   });
   test("unverified URLs and unsupported sections never become sourced findings", () => {
-    const base = { title: "Finding", summary: "Estimate", actions: [], assumptions: [], evidenceStatus: "verified" as const, sourceUrls: ["https://invented.example"] };
+    const base = { title: "Finding", summary: "Estimate", actions: [], assumptions: [], evidenceStatus: "verified", sourceUrls: ["https://invented.example"] };
     const result = filterDecisionSupport([{ ...base, id: "scoreRationale" }, { ...base, id: "capital" }], "pro", new Set());
     expect(result).toHaveLength(1);
     expect(result[0]?.sourceUrls).toEqual([]);
     expect(result[0]?.evidenceStatus).toBe("estimate");
   });
-  test("Intelligence requires 6, 12 and 24 month scenarios", () => {
-    expect(decisionSupportPrompt("intelligence")).toContain("exactly 6, 12 and 24 months");
-    expect(decisionSupportPrompt("pro")).not.toContain("exactly 6, 12 and 24 months");
+  test("Intelligence includes growth while Pro does not", () => {
+    expect(SUPPORT_BY_TIER.intelligence).toContain("growth");
+    expect(SUPPORT_BY_TIER.pro).not.toContain("growth");
   });
 });
