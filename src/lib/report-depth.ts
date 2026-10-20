@@ -17,7 +17,7 @@ export const DecisionSupportSchema = z.array(z.object({
   actions: z.array(z.string()),
   assumptions: z.array(z.string()),
   evidenceStatus: z.enum(["verified", "estimate", "unknown"]),
-  sourceUrls: z.array(z.string()),
+  sourceUrls: z.preprocess(value => Array.isArray(value) ? value : [], z.array(z.string())),
 })).default([]);
 export type DecisionSupport = z.infer<typeof DecisionSupportSchema>;
 
