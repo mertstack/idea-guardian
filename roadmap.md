@@ -2,6 +2,6 @@
 - [x] Son isteğe göre isim, logo ve panel etiketlerini FailWise olarak sabit tut; marka değişimi yerine sektör seçimi sun.
 - [x] Mevcut siyah–gri / mercan kırmızısı renklerini koru; Türkçe ve İngilizce metinleri tamamla.
 - [x] Sayfayı ve sektör seçimini kontrol et, gerekli paket güncellemesini uygula.
-- [ ] Herkese açık site erişimini ve bildirilen açılma hatasını kontrol et.
-- [ ] Gönderilen analiz gereksinimlerini Pro, Expert ve Intelligence derinliklerine dağıt.
-- [ ] Paketlere göre gerçek rapor alanlarını, kaynak güvenliğini ve analiz akışını test et.
+- [x] Herkese açık site erişimini kontrol et; bildirilen açılma hatası yeniden oluşmadı, WebGL desteği olmayan cihazlarda güvenli görünüm ekle.
+- [x] Gönderilen analiz gereksinimlerini Pro, Expert ve Intelligence derinliklerine dağıt.
+- [x] Paketlere göre gerçek rapor alanlarını, kaynak güvenliğini ve analiz akışını test et.
