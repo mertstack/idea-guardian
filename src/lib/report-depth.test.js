@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test";
-import { SUPPORT_BY_TIER, filterDecisionSupport } from "./report-depth";
+import { SUPPORT_BY_TIER, filterDecisionSupport, DecisionSupportSchema } from "./report-depth";
 
 describe("report depth rules", () => {
+  test("missing evidence URLs remain empty rather than blocking an analysis", () => {
+    const items = DecisionSupportSchema.parse([{ id: "riskActions", title: "Risk", summary: "Next steps", actions: [], assumptions: [], evidenceStatus: "estimate", sourceUrls: null }]);
+    expect(items[0].sourceUrls).toEqual([]);
+  });
   test("most additions belong to Intelligence, with smaller Pro and Expert sets", () => {
     expect(SUPPORT_BY_TIER.pro).toHaveLength(3);
     expect(SUPPORT_BY_TIER.expert).toHaveLength(6);
