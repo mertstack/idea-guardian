@@ -41,24 +41,27 @@ export function Hero3D() {
   if (!supported) return null;
   return (
     <SceneBoundary>
-    <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
-      <Canvas
-        dpr={[1, 1.6]}
-        camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ antialias: true, alpha: true }}
-      >
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[4, 4, 6]} intensity={1.2} color="#ffffff" />
-        <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#FF5A5F" />
-        <Suspense fallback={null}>
-          <Orb />
-          <Environment>
-            <Lightformer intensity={2} position={[0, 5, 0]} scale={[10, 10, 1]} />
-            <Lightformer intensity={1} color="#FF5A5F" position={[-5, 1, -1]} rotation-y={Math.PI / 2} scale={[20, 1, 1]} />
-          </Environment>
-        </Suspense>
-      </Canvas>
-    </div>
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
+        <Canvas
+          dpr={[1, 1.6]}
+          camera={{ position: [0, 0, 5], fov: 45 }}
+          gl={{ antialias: true, alpha: true }}
+        >
+          <ambientLight intensity={0.4} />
+          <directionalLight position={[4, 4, 6]} intensity={1.2} color="#ffffff" />
+          <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#FF5A5F" />
+          <Suspense fallback={null}>
+            <Orb />
+            {/* Local studio lighting (similar to the "city" look) — no outside download that can fail. */}
+            <Environment resolution={256}>
+              <Lightformer intensity={2} position={[0, 5, -3]} scale={[10, 5, 1]} />
+              <Lightformer intensity={1.2} position={[5, 2, 0]} rotation-y={-Math.PI / 2} scale={[8, 4, 1]} />
+              <Lightformer intensity={1.2} position={[-5, 1, 0]} rotation-y={Math.PI / 2} scale={[8, 4, 1]} />
+              <Lightformer intensity={0.8} position={[0, -4, 2]} rotation-x={Math.PI / 2} scale={[10, 10, 1]} />
+            </Environment>
+          </Suspense>
+        </Canvas>
+      </div>
     </SceneBoundary>
   );
 }
