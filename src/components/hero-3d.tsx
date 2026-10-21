@@ -1,6 +1,6 @@
 import { Component, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, Environment } from "@react-three/drei";
+import { Float, MeshDistortMaterial, Environment, Lightformer } from "@react-three/drei";
 import type { Mesh } from "three";
 
 function Orb() {
@@ -31,7 +31,6 @@ export function Hero3D() {
   const [supported, setSupported] = useState(false);
   useEffect(() => {
     try {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const canvas = document.createElement("canvas");
       const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
       if (!gl) return;
@@ -53,7 +52,10 @@ export function Hero3D() {
         <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#FF5A5F" />
         <Suspense fallback={null}>
           <Orb />
-          <Environment preset="city" />
+          <Environment>
+            <Lightformer intensity={2} position={[0, 5, 0]} scale={[10, 10, 1]} />
+            <Lightformer intensity={1} color="#FF5A5F" position={[-5, 1, -1]} rotation-y={Math.PI / 2} scale={[20, 1, 1]} />
+          </Environment>
         </Suspense>
       </Canvas>
     </div>
