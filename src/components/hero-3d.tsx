@@ -16,7 +16,7 @@ function Orb() {
     if (mesh.current) {
       mesh.current.rotation.x += dt * 0.12;
       mesh.current.rotation.y += dt * 0.18;
-      const s = 1.55 + Math.sin(t * 0.9) * 0.04;
+      const s = 1.05 + Math.sin(t * 0.9) * 0.03;
       mesh.current.scale.setScalar(s);
     }
     if (group.current) {
@@ -36,15 +36,15 @@ function Orb() {
             color="#FF5A5F"
             distort={0.38}
             speed={1.6}
-            roughness={0.08}
+            roughness={0.18}
             metalness={0.35}
             clearcoat={1}
             clearcoatRoughness={0.05}
-            envMapIntensity={1.6}
+            envMapIntensity={0.9}
           />
         </mesh>
         <mesh ref={ring} rotation={[Math.PI / 2.4, 0, 0]}>
-          <torusGeometry args={[2.35, 0.012, 16, 200]} />
+          <torusGeometry args={[1.75, 0.01, 16, 200]} />
           <meshStandardMaterial color="#FF8A8D" emissive="#FF5A5F" emissiveIntensity={0.8} roughness={0.3} />
         </mesh>
       </Float>
@@ -73,10 +73,10 @@ export function Hero3D() {
   if (!supported) return null;
   return (
     <SceneBoundary>
-      <div className="pointer-events-none absolute inset-0 -z-10 opacity-90">
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-75">
         <Canvas
           dpr={[1, 1.75]}
-          camera={{ position: [0, 0, 5.5], fov: 45 }}
+          camera={{ position: [0, 0, 7], fov: 45 }}
           gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping }}
         >
           <ambientLight intensity={0.25} />
@@ -86,10 +86,10 @@ export function Hero3D() {
           <Suspense fallback={null}>
             <Orb />
             <Environment resolution={256}>
-              <Lightformer intensity={3} position={[0, 5, -2]} scale={[10, 4, 1]} />
-              <Lightformer intensity={2} position={[5, 1, 2]} rotation-y={-Math.PI / 2} scale={[6, 6, 1]} />
+              <Lightformer intensity={1.6} position={[0, 5, -2]} scale={[10, 4, 1]} />
+              <Lightformer intensity={1} position={[5, 1, 2]} rotation-y={-Math.PI / 2} scale={[6, 6, 1]} />
               <Lightformer intensity={1.5} color="#FF5A5F" position={[-5, 0, 1]} rotation-y={Math.PI / 2} scale={[20, 2, 1]} />
-              <Lightformer form="ring" intensity={2} position={[0, -3, 4]} scale={3} />
+              <Lightformer form="ring" intensity={1} position={[0, -3, 4]} scale={3} />
             </Environment>
           </Suspense>
         </Canvas>
