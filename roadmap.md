@@ -5,3 +5,4 @@
 - [x] Herkese açık site erişimini kontrol et; bildirilen açılma hatası yeniden oluşmadı, WebGL desteği olmayan cihazlarda güvenli görünüm ekle.
 - [x] Gönderilen analiz gereksinimlerini Pro, Expert ve Intelligence derinliklerine dağıt.
 - [x] Paketlere göre gerçek rapor alanlarını, kaynak güvenliğini ve analiz akışını test et.
+- [x] Ana sayfadaki 3D küreyi ilk haline geri getir
